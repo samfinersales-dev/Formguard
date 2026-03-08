@@ -1,6 +1,14 @@
 [build]
   functions = "netlify/functions"
 
+[build.processing]
+  skip_processing = true
+
+[[redirects]]
+  from = "/webhook/stripe"
+  to = "/.netlify/functions/stripe-webhook"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]
