@@ -82,7 +82,10 @@ Output ONLY a JSON object with these exact fields:
   const response = await callClaude(researchPrompt, true); // true = use web search
   
   try {
-    const clean = response.replace(/```json|```/g, '').trim();
+    const jsonStart = response.indexOf('{');
+    const jsonEnd = response.lastIndexOf('}');
+    if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON in response: ' + response.slice(0,100));
+    const clean = response.slice(jsonStart, jsonEnd + 1);
     const data = JSON.parse(clean);
     console.log(`✅ Topic selected: "${data.title}"`);
     console.log(`   Slug: ${data.slug}`);
@@ -121,7 +124,8 @@ CRITICAL ACCURACY RULES:
 7. Natural CTA near the end linking to ${SITE_CONFIG.ctaUrl}: "${SITE_CONFIG.ctaText}"
 8. Plain English. No jargon without explanation.
 
-FORMAT — return a JSON object with exactly these fields:
+You MUST respond with ONLY a raw JSON object. No preamble, no explanation, no markdown, no code fences. Start your response with { and end with }.
+
 {
   "title": "${topic.title}",
   "slug": "${topic.slug}",
@@ -147,7 +151,10 @@ FORMAT — return a JSON object with exactly these fields:
   const response = await callClaude(writePrompt, true); // web search for accuracy
   
   try {
-    const clean = response.replace(/```json|```/g, '').trim();
+    const jsonStart = response.indexOf('{');
+    const jsonEnd = response.lastIndexOf('}');
+    if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON in response: ' + response.slice(0,100));
+    const clean = response.slice(jsonStart, jsonEnd + 1);
     const article = JSON.parse(clean);
     console.log(`✅ Article written: ~${article.wordCount} words`);
     return article;
@@ -358,6 +365,7 @@ function callClaude(prompt, useWebSearch = false) {
     const body = JSON.stringify({
       model: 'claude-sonnet-4-6',
       max_tokens: 4000,
+      system: 'You are a JSON API. You MUST respond with only valid JSON. Never include explanations, preamble, or markdown. Always start your response with { and end with }.',
       ...(useWebSearch ? { tools: [{ type: 'web_search_20250305', name: 'web_search' }] } : {}),
       messages: [{ role: 'user', content: prompt }]
     });
