@@ -72,8 +72,11 @@ async function pickTopic() {
     'Connecticut','Iowa','Utah','Nevada','Arkansas','Mississippi','Kansas','New Mexico',
     'Nebraska','West Virginia','Idaho','Hawaii','New Hampshire','Maine','Montana',
     'Rhode Island','Delaware','South Dakota','North Dakota','Alaska','Vermont','Wyoming'];
-  var doState = weekNum % 2 === 0;
+  var stateTopicArea = SITE_CONFIG.topicArea.toLowerCase();
+  var supportsStateSpecific = stateTopicArea.includes('lease') || stateTopicArea.includes('small claims') || stateTopicArea.includes('landlord') || stateTopicArea.includes('tenant');
+  var doState = supportsStateSpecific && (weekNum % 2 === 0);
   var state = states[weekNum % states.length];
+  var year = new Date().getFullYear();
   var stateNote = doState ? ('Focus on ' + state + '-specific rules and figures.') : 'Write a general evergreen article.';
 
   var prompt = 'You are an SEO writer for ' + SITE_CONFIG.siteName + ' (' + SITE_CONFIG.domain + ').\n' +
@@ -82,7 +85,7 @@ async function pickTopic() {
     'Topic area: ' + SITE_CONFIG.topicArea + '\n' +
     stateNote + '\n\n' +
     'Choose ONE specific blog topic with high search volume and clear how-to intent.\n\n' +
-    'YOU MUST RESPOND WITH ONLY THESE LINES AND NOTHING ELSE:\n' +
+    'Current year: ' + year + '. Do NOT include a year number in the TITLE.\nYOU MUST RESPOND WITH ONLY THESE LINES AND NOTHING ELSE:\n' +
     'TITLE: [title here]\n' +
     'SLUG: [slug-here]\n' +
     'META: [155 char description]\n' +
