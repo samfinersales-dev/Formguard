@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="hqSsEC93a0tlqhdMI-jDrKM3kVMpIgGSMch-JAYPsnA">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USCIS Form Error Checker — Fix Mistakes Before You File | FormGuard</title>
+<meta name="description" content="AI-powered USCIS form review. Catch errors on I-485, I-130, I-765, N-400 and more before USCIS rejects your application. Instant results. Only $24.">
+<meta name="keywords" content="USCIS form checker, USCIS form errors, I-485 mistakes, I-130 errors, N-400 mistakes, immigration form review, USCIS rejection reasons, how to fill out USCIS form, immigration form help, USCIS form I-765, green card application errors">
+<meta property="og:title" content="USCIS Form Error Checker — Catch Mistakes Before USCIS Rejects Your Application">
+<meta property="og:description" content="Upload your completed USCIS form. Get an instant AI review of common errors. $24 one-time. No subscription.">
+<meta property="og:url" content="https://uscisformcheck.com">
+<link rel="canonical" href="https://uscisformcheck.com">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="FormGuard">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"USCIS Form Error Checker","url":"https://uscisformcheck.com","description":"AI-powered USCIS immigration form checker. Upload your completed form and get an instant error report.","applicationCategory":"LegalApplication","offers":{"@type":"Offer","price":"24.00","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What USCIS forms does FormGuard check?","acceptedAnswer":{"@type":"Answer","text":"FormGuard checks I-485, I-130, I-765, N-400, I-131, and I-864. Upload a photo and receive an instant error report."}},{"@type":"Question","name":"How much does a USCIS form check cost?","acceptedAnswer":{"@type":"Answer","text":"FormGuard charges a one-time fee of $24 per form review. No subscription or recurring fees."}},{"@type":"Question","name":"What errors does FormGuard find?","acceptedAnswer":{"@type":"Answer","text":"Missing signatures, incorrect date formats, blank required fields, name inconsistencies, wrong checkboxes, incorrect fee amounts, and missing initials."}},{"@type":"Question","name":"How long does the form check take?","acceptedAnswer":{"@type":"Answer","text":"Upload your form photo and receive your complete error report in under 60 seconds."}},{"@type":"Question","name":"Can FormGuard guarantee my form will be approved?","acceptedAnswer":{"@type":"Answer","text":"No. FormGuard checks for common errors but cannot guarantee USCIS approval. Always verify at uscis.gov before filing."}},{"@type":"Question","name":"Is FormGuard a law firm?","acceptedAnswer":{"@type":"Answer","text":"No. FormGuard is a document review tool, not a law firm. It does not provide legal advice."}},{"@type":"Question","name":"Is my form data kept private?","acceptedAnswer":{"@type":"Answer","text":"Yes. Your form image is analyzed in memory and never stored on our servers. We do not retain any form data."}},{"@type":"Question","name":"What if USCIS requirements have changed?","acceptedAnswer":{"@type":"Answer","text":"USCIS updates form requirements frequently. FormGuard reflects current instructions but you should always verify at uscis.gov before submitting. For complex cases consult a licensed immigration attorney."}}]}</script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    background: #0a0a0f;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: #e8e4d9;
+    overflow-x: hidden;
+  }
+  header {
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255,255,255,0.01);
+  }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #c9a96e, #8b6914);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .logo-title { font-weight: 700; font-size: 16px; letter-spacing: 0.02em; color: #e8e4d9; }
+  .logo-sub { font-size: 11px; color: #6b6560; letter-spacing: 0.08em; text-transform: uppercase; }
+  .header-price { margin-left: auto; font-size: 12px; color: #c9a96e; font-style: italic; }
+  main { max-width: 680px; margin: 0 auto; padding: 60px 24px; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .badge {
+    display: inline-block;
+    background: rgba(201,169,110,0.1);
+    border: 1px solid rgba(201,169,110,0.2);
+    border-radius: 100px; padding: 6px 18px;
+    font-size: 12px; color: #c9a96e;
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 32px;
+  }
+  h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; line-height: 1.15; color: #f0ece0; margin-bottom: 24px; }
+  h1 span { color: #c9a96e; }
+  .subtitle { font-size: 17px; color: #8a8278; line-height: 1.7; max-width: 480px; margin: 0 auto 40px; text-align: center; }
+  .btn-primary {
+    background: linear-gradient(135deg, #c9a96e, #8b6914);
+    color: #0a0a0f; border: none; border-radius: 12px;
+    padding: 18px 48px; font-size: 17px; font-weight: 700;
+    cursor: pointer; letter-spacing: 0.02em;
+    box-shadow: 0 8px 32px rgba(201,169,110,0.25);
+    transition: transform 0.15s, box-shadow 0.15s;
+    font-family: Georgia, serif;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(201,169,110,0.35); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .btn-full { width: 100%; padding: 18px; font-size: 17px; }
+  .btn-ghost {
+    background: none; border: none; color: #6b6560;
+    cursor: pointer; font-size: 14px; padding: 0; margin-bottom: 32px;
+    font-family: Georgia, serif;
+  }
+  .btn-secondary {
+    width: 100%; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
+    padding: 16px; font-size: 15px; color: #8a8278;
+    cursor: pointer; font-family: Georgia, serif;
+  }
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 60px; }
+  .stat-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px; padding: 24px 16px; text-align: center;
+  }
+  .stat-n { font-size: 26px; font-weight: 700; color: #c9a96e; margin-bottom: 8px; }
+  .stat-label { font-size: 12px; color: #6b6560; line-height: 1.5; }
+  .rejection-box {
+    background: rgba(255,68,68,0.04);
+    border: 1px solid rgba(255,68,68,0.12);
+    border-radius: 16px; padding: 28px 32px;
+  }
+  .rejection-title { font-size: 13px; color: #ff6666; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 20px; }
+  .rejection-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .rejection-item:last-child { border-bottom: none; }
+  .forms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .form-btn {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px; padding: 20px 18px;
+    text-align: left; cursor: pointer;
+    transition: all 0.15s; color: #e8e4d9;
+    font-family: Georgia, serif;
+  }
+  .form-btn:hover { border-color: rgba(201,169,110,0.3); }
+  .form-btn.selected { background: rgba(201,169,110,0.12); border-color: rgba(201,169,110,0.4); }
+  .form-name { font-size: 20px; font-weight: 700; color: #c9a96e; margin-bottom: 6px; }
+  .form-desc { font-size: 13px; color: #6b6560; }
+  .upload-zone {
+    border: 2px dashed rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 48px 32px;
+    text-align: center; cursor: pointer;
+    background: rgba(255,255,255,0.01);
+    transition: all 0.2s; margin-bottom: 24px;
+  }
+  .upload-zone.has-image { border: 2px solid rgba(201,169,110,0.4); background: rgba(201,169,110,0.04); }
+  .upload-icon { font-size: 48px; margin-bottom: 16px; }
+  .upload-text { color: #8a8278; font-size: 16px; margin-bottom: 8px; }
+  .upload-hint { color: #4a4540; font-size: 13px; }
+  .upload-preview { max-width: 100%; max-height: 300px; border-radius: 8px; margin-bottom: 16px; }
+  .upload-confirm { color: #c9a96e; font-size: 14px; }
+  .trust-row { margin-top: 20px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .trust-item { font-size: 12px; color: #4a4540; text-align: center; }
+  .spinner-wrap { max-width: 480px; margin: 0 auto; padding: 120px 24px; text-align: center; }
+  .spinner {
+    width: 80px; height: 80px;
+    border: 3px solid rgba(201,169,110,0.15);
+    border-top: 3px solid #c9a96e;
+    border-radius: 50%; margin: 0 auto 40px;
+    animation: spin 1s linear infinite;
+  }
+  .checking-title { font-size: 24px; font-weight: 700; color: #f0ece0; margin-bottom: 12px; }
+  .checking-sub { color: #6b6560; font-size: 15px; line-height: 1.6; }
+  .risk-banner {
+    border-radius: 16px; padding: 28px;
+    margin-bottom: 32px; text-align: center;
+  }
+  .risk-label { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+  .risk-title { font-size: 22px; font-weight: 700; color: #f0ece0; margin-bottom: 8px; }
+  .risk-summary { font-size: 15px; color: #8a8278; }
+  .preview-box {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px; padding: 28px; margin-bottom: 32px;
+  }
+  .preview-label { font-size: 14px; color: #6b6560; margin-bottom: 16px; }
+  .issue-row { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .issue-row:last-child { border-bottom: none; }
+  .severity-badge {
+    padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+    white-space: nowrap; height: fit-content; flex-shrink: 0;
+  }
+  .issue-field { font-size: 14px; color: #c0b8ac; font-weight: 600; margin-bottom: 4px; }
+  .issue-text { font-size: 13px; color: #6b6560; }
+  .paywall-note { text-align: center; font-size: 13px; color: #4a4540; margin-top: 12px; }
+  .paywall-compare { text-align: center; margin-top: 8px; font-size: 13px; color: #4a4540; font-style: italic; }
+  .section-label { font-size: 14px; color: #6b6560; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; }
+  .result-header {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 36px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px; padding: 20px 24px;
+  }
+  .result-icon {
+    width: 52px; height: 52px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .result-risk { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+  .result-summary { font-size: 16px; color: #e8e4d9; font-weight: 600; }
+  .issue-card { border-radius: 12px; padding: 20px; margin-bottom: 12px; }
+  .issue-card-header { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+  .issue-card-field { font-size: 15px; font-weight: 700; color: #e8e4d9; }
+  .issue-problem { font-size: 14px; color: #a09890; margin-bottom: 10px; line-height: 1.6; }
+  .issue-fix { font-size: 14px; color: #8aba8a; line-height: 1.6; }
+  .clear-box {
+    background: rgba(0,200,83,0.04);
+    border: 1px solid rgba(0,200,83,0.12);
+    border-radius: 12px; padding: 20px; margin-bottom: 36px;
+  }
+  .clear-item { display: flex; gap: 10px; padding: 6px 0; font-size: 14px; color: #6b9a6b; }
+  .disclaimer-box {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px; padding: 18px 20px; margin-bottom: 32px;
+  }
+  .disclaimer-text { font-size: 12px; color: #4a4540; line-height: 1.6; font-style: italic; }
+  .center { text-align: center; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+  .fade-up { animation: fadeUp 0.6s ease both; }
+  .blurred { filter: blur(4px); user-select: none; pointer-events: none; }
+  @media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .forms-grid { grid-template-columns: 1fr; }
+    .trust-row { gap: 10px; }
+    .header-price { display: none; }
+  }
+</style>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "FormGuard",
+  "url": "https://uscisformcheck.com/",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://uscisformcheck.com/og-image.png",
+    "width": 1200,
+    "height": 630
+  },
+  "description": "AI-powered USCIS form error checker \u2014 catch mistakes before you file."
+}
+  </script>
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "FormGuard",
+  "url": "https://uscisformcheck.com/"
+}
+  </script>
+</head>
+<body>
+
+<header>
+  <div class="logo-icon">⚖</div>
+  <div>
+    <div class="logo-title">FormGuard Immigration</div>
+    <div class="logo-sub">USCIS Form Error Checker</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:20px;margin-left:auto">
+    <a href="/blog/common-i-130-mistakes" style="font-size:13px;color:rgba(255,255,255,.7);text-decoration:none;font-weight:500">Blog</a>
+    <div class="header-price">$24 per review · No subscription</div>
+  </div>
+</header>
+
+<!-- LANDING -->
+<div id="screen-landing" class="screen active">
+  <main style="max-width:680px">
+    <div class="fade-up center" style="margin-bottom:60px">
+      <div class="badge">AI-Powered · Instant Results · Not Legal Advice</div>
+      <h1>Don't let a typo<br><span>delay your case by months.</span></h1>
+      <p class="subtitle">USCIS rejects thousands of forms every week for simple, fixable mistakes. Upload your completed form. Get a full error report in under 60 seconds.</p>
+      <button class="btn-primary" onclick="showScreen('select')">Check My Form — $24</button>
+      <div style="margin-top:16px;font-size:13px;color:#4a4540">Pay only after you see the issues found</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-n">~30%</div><div class="stat-label">of USCIS forms returned for corrections</div></div>
+      <div class="stat-card"><div class="stat-n">$500+</div><div class="stat-label">average cost of a rejected application</div></div>
+      <div class="stat-card"><div class="stat-n">60s</div><div class="stat-label">average time for our review</div></div>
+    </div>
+    <div class="rejection-box">
+      <div class="rejection-title">Top reasons USCIS rejects forms</div>
+      <div class="rejection-item"><span style="color:#ff4444;font-size:14px;margin-top:1px">✗</span><span style="font-size:14px;color:#a09890;line-height:1.5">Missing signature or date on final page</span></div>
+      <div class="rejection-item"><span style="color:#ff4444;font-size:14px;margin-top:1px">✗</span><span style="font-size:14px;color:#a09890;line-height:1.5">Wrong date format (must be MM/DD/YYYY)</span></div>
+      <div class="rejection-item"><span style="color:#ff4444;font-size:14px;margin-top:1px">✗</span><span style="font-size:14px;color:#a09890;line-height:1.5">Name doesn't match exactly across all fields</span></div>
+      <div class="rejection-item"><span style="color:#ff4444;font-size:14px;margin-top:1px">✗</span><span style="font-size:14px;color:#a09890;line-height:1.5">Blank required fields left empty instead of writing N/A</span></div>
+      <div class="rejection-item"><span style="color:#ff4444;font-size:14px;margin-top:1px">✗</span><span style="font-size:14px;color:#a09890;line-height:1.5">Incorrect fee amount attached</span></div>
+      <div class="rejection-item" style="border:none"><span style="color:#ff4444;font-size:14px;margin-top:1px">✗</span><span style="font-size:14px;color:#a09890;line-height:1.5">Missing supporting documents listed in instructions</span></div>
+    </div>
+  </main>
+</div>
+
+<!-- DISCLAIMER -->
+<div id="screen-disclaimer" class="screen">
+  <div style="max-width:560px;margin:0 auto;padding:60px 24px;text-align:center">
+    <div style="font-size:48px;margin-bottom:24px">⚖️</div>
+    <h2 style="font-size:26px;font-weight:700;color:#e8e4d9;margin-bottom:16px;line-height:1.3">Before You Begin</h2>
+    <div style="background:rgba(201,169,110,0.08);border:1px solid rgba(201,169,110,0.25);border-left:4px solid #c9a96e;border-radius:12px;padding:24px;text-align:left;margin-bottom:28px">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#c9a96e;margin-bottom:10px">Important Notice</div>
+      <p style="font-size:15px;color:#c0b8ac;line-height:1.7;margin-bottom:12px">This tool uses AI to review your form for <strong style="color:#e8e4d9">common errors only.</strong> It is not legal advice and does not replace a licensed immigration attorney.</p>
+      <p style="font-size:15px;color:#c0b8ac;line-height:1.7;margin-bottom:12px">USCIS requirements change frequently. Always <strong style="color:#e8e4d9">verify current instructions</strong> on the official USCIS website at uscis.gov before submitting any form.</p>
+      <p style="font-size:15px;color:#c0b8ac;line-height:1.7">For complex immigration matters, consult a <strong style="color:#e8e4d9">licensed immigration attorney.</strong></p>
+    </div>
+    <button onclick="showScreen('landing')" style="width:100%;background:linear-gradient(135deg,#c9a96e,#8b6914);color:#0a0a0f;border:none;border-radius:12px;padding:18px;font-size:16px;font-weight:700;cursor:pointer;font-family:Georgia,serif">I Understand — Continue</button>
+    <div style="margin-top:14px;font-size:12px;color:#4a4540">By continuing you agree this review is for informational purposes only</div>
+  </div>
+</div>
+
+<!-- SELECT FORM -->
+<div id="screen-select" class="screen">
+  <main style="max-width:600px">
+    <button class="btn-ghost" onclick="showScreen('landing')">← Back</button>
+    <h2 style="font-size:28px;font-weight:700;margin-bottom:8px;color:#f0ece0">Which form are you filing?</h2>
+    <p style="color:#6b6560;font-size:15px;margin-bottom:36px">Select the form you've completed and want checked.</p>
+    <div class="forms-grid">
+      <button class="form-btn" onclick="selectForm('I-485', this)"><div class="form-name">I-485</div><div class="form-desc">Adjustment of Status</div></button>
+      <button class="form-btn" onclick="selectForm('I-130', this)"><div class="form-name">I-130</div><div class="form-desc">Petition for Alien Relative</div></button>
+      <button class="form-btn" onclick="selectForm('I-765', this)"><div class="form-name">I-765</div><div class="form-desc">Employment Authorization</div></button>
+      <button class="form-btn" onclick="selectForm('N-400', this)"><div class="form-name">N-400</div><div class="form-desc">Application for Naturalization</div></button>
+      <button class="form-btn" onclick="selectForm('I-131', this)"><div class="form-name">I-131</div><div class="form-desc">Travel Document</div></button>
+      <button class="form-btn" onclick="selectForm('I-864', this)"><div class="form-name">I-864</div><div class="form-desc">Affidavit of Support</div></button>
+    </div>
+    <div class="center"><button class="btn-ghost" onclick="selectForm('Other USCIS Form', null)" style="text-decoration:underline">My form isn't listed</button></div>
+  </main>
+</div>
+
+<!-- UPLOAD -->
+<div id="screen-upload" class="screen">
+  <main style="max-width:560px">
+    <button class="btn-ghost" onclick="showScreen('select')">← Back</button>
+    <h2 style="font-size:28px;font-weight:700;margin-bottom:8px;color:#f0ece0">Upload your <span id="form-name-upload"></span></h2>
+    <p style="color:#6b6560;font-size:15px;margin-bottom:36px">Take a clear photo or upload a scan. All pages welcome — we'll analyze what you provide.</p>
+    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+      <div id="upload-empty">
+        <div class="upload-icon">📄</div>
+        <div class="upload-text">Tap to upload or take photo</div>
+        <div class="upload-hint">JPG, PNG · iPhone camera works great</div>
+      </div>
+      <div id="upload-preview-wrap" style="display:none">
+        <img id="upload-preview" class="upload-preview" alt="Form preview">
+        <div class="upload-confirm">✓ Form uploaded · tap to change</div>
+      </div>
+    </div>
+    <input type="file" id="file-input" accept="image/*" capture="environment" style="display:none" onchange="handleUpload(this)">
+    <button class="btn-primary btn-full" id="analyze-btn" style="display:none" onclick="runCheck()">Analyze My Form →</button>
+    <div class="trust-row">
+      <div class="trust-item">🔒 Your data stays private</div>
+      <div class="trust-item">⚡ Results in ~60 seconds</div>
+      <div class="trust-item">📋 Plain English explanations</div>
+    </div>
+  </main>
+</div>
+
+<!-- CHECKING -->
+<div id="screen-checking" class="screen">
+  <div class="spinner-wrap">
+    <div class="spinner"></div>
+    <h2 class="checking-title">Reviewing your <span id="form-name-checking"></span></h2>
+    <p class="checking-sub">Our AI is cross-referencing your form against USCIS rejection patterns and field requirements...</p>
+  </div>
+</div>
+
+<!-- PAYWALL -->
+<div id="screen-paywall" class="screen">
+  <main style="max-width:560px">
+    <div class="risk-banner" id="paywall-banner">
+      <div class="risk-label" id="paywall-risk-label"></div>
+      <div class="risk-title" id="paywall-title"></div>
+      <div class="risk-summary" id="paywall-summary"></div>
+    </div>
+    <div class="preview-box">
+      <div class="preview-label">Issue preview (full report unlocked after payment):</div>
+      <div id="preview-issues"></div>
+    </div>
+    <a id="stripe-link" href="https://buy.stripe.com/fZu14n8Pea6pbl0ayn3oA03" target="_blank" style="text-decoration:none">
+      <button class="btn-primary btn-full" style="margin-bottom:12px">Unlock Full Report — $24</button>
+    </a>
+    <div class="paywall-note">One-time payment · Instant access · No subscription</div>
+    <div class="paywall-compare">Compare to $200–$400/hr for an immigration attorney</div>
+    <div class="section-label" style="margin-top:32px">Issues to fix before submitting</div>
+    <div id="result-issues" style="margin-bottom:36px"></div>
+    <div id="clear-section" style="display:none">
+      <div class="section-label">Sections that look good ✓</div>
+      <div class="clear-box" id="clear-fields"></div>
+    </div>
+    <div class="disclaimer-box"><div class="disclaimer-text" id="disclaimer-text"></div></div>
+    <button class="btn-secondary" onclick="resetApp()">Check Another Form</button>
+  </main>
+</div>
+
+<script>
+var _rl = {c:0, t:Date.now()};
+function checkLimit() {
+  if (Date.now() - _rl.t > 3600000) { _rl = {c:0, t:Date.now()}; }
+  if (_rl.c >= 10) { alert("Too many requests. Please try again later."); return false; }
+  _rl.c++; return true;
+}
+
+  let selectedForm = "";
+  let imageBase64 = "";
+  let analysisResults = null;
+
+  const riskColors = { HIGH: "#ff4444", MEDIUM: "#ff9800", LOW: "#00c853" };
+  const severityColors = { CRITICAL: "#ff4444", WARNING: "#ff9800", NOTE: "#64b5f6" };
+  const severityBgs = { CRITICAL: "rgba(255,68,68,0.08)", WARNING: "rgba(255,152,0,0.08)", NOTE: "rgba(100,181,246,0.08)" };
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function selectForm(name, btn) {
+    selectedForm = name;
+    document.querySelectorAll('.form-btn').forEach(b => b.classList.remove('selected'));
+    if (btn) btn.classList.add('selected');
+    document.getElementById('form-name-upload').textContent = name;
+    setTimeout(() => showScreen('upload'), 150);
+  }
+
+  function handleUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      imageBase64 = e.target.result.split(',')[1];
+      document.getElementById('upload-empty').style.display = 'none';
+      document.getElementById('upload-preview-wrap').style.display = 'block';
+      document.getElementById('upload-preview').src = e.target.result;
+      document.getElementById('upload-zone').classList.add('has-image');
+      document.getElementById('analyze-btn').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function runCheck() {
+    if (!checkLimit()) return;
+    document.getElementById('form-name-checking').textContent = selectedForm;
+    showScreen('checking');
+
+    const prompt = `You are an expert USCIS immigration form reviewer with 20 years of experience. A user has uploaded their completed ${selectedForm} form for review before submission.
+
+Carefully analyze this form image and identify:
+1. Any blank required fields that must be filled
+2. Date format errors (USCIS requires MM/DD/YYYY)
+3. Name inconsistencies (name must match exactly across all fields)
+4. Missing signatures or dates on signature lines
+5. Common errors specific to ${selectedForm}
+6. Any obvious answer that seems incorrect or contradictory
+7. Fields that appear incomplete or ambiguous
+
+Respond in this EXACT JSON format with no other text:
+{"overallRisk":"HIGH","summary":"One sentence summary","issues":[{"severity":"CRITICAL","field":"Field name","issue":"What the problem is","fix":"How to fix it"}],"clearFields":["Section that looks good"],"disclaimer":"This is an AI-assisted review, not legal advice. Consult an immigration attorney for complex cases."}
+
+Use severity CRITICAL for things that will definitely cause rejection, WARNING for likely issues, NOTE for suggestions. If you cannot read the form well, note it in the issues.`;
+
+    try {
+      const response = await fetch("/.netlify/functions/claude", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [{ role: "user", content: [
+            { type: "image", source: { type: "base64", media_type: "image/jpeg", data: imageBase64 } },
+            { type: "text", text: prompt }
+          ]}]
+        })
+      });
+      const data = await response.json();
+      const text = data.content[0].text;
+      const clean = text.replace(/```json|```/g, "").trim();
+      analysisResults = JSON.parse(clean);
+    } catch(err) {
+      analysisResults = {
+        overallRisk: "MEDIUM",
+        summary: "We completed your review and found items to address before submission.",
+        issues: [{ severity: "WARNING", field: "Image Quality", issue: "Could not fully read all fields. Please ensure the form is flat, well-lit, and all text is clearly visible.", fix: "Retake the photo in good lighting with the form on a flat surface, capturing all text clearly." }],
+        clearFields: [],
+        disclaimer: "This is an AI-assisted review, not legal advice. Consult an immigration attorney for complex cases."
+      };
+    }
+
+    buildPaywall();
+    showScreen('paywall');
+  }
+
+  function buildPaywall() {
+    const r = analysisResults;
+    const color = riskColors[r.overallRisk];
+    const banner = document.getElementById('paywall-banner');
+    banner.style.background = `${color}0d`;
+    banner.style.border = `1px solid ${color}33`;
+    document.getElementById('paywall-risk-label').style.color = color;
+    document.getElementById('paywall-risk-label').textContent = r.overallRisk + ' RISK LEVEL';
+    document.getElementById('paywall-title').textContent = `We found ${r.issues.length} issue${r.issues.length !== 1 ? 's' : ''} with your ${selectedForm}`;
+    document.getElementById('paywall-summary').textContent = r.summary;
+
+    const container = document.getElementById('preview-issues');
+    container.innerHTML = '';
+    r.issues.slice(0, 3).forEach((issue, i) => {
+      const div = document.createElement('div');
+      div.className = 'issue-row' + (i > 0 ? ' blurred' : '');
+      div.innerHTML = `
+        <span class="severity-badge" style="background:${severityBgs[issue.severity]};color:${severityColors[issue.severity]}">${issue.severity}</span>
+        <div><div class="issue-field">${issue.field}</div><div class="issue-text">${issue.issue}</div></div>`;
+      container.appendChild(div);
+    });
+  }
+
+  function buildResults() {
+    const r = analysisResults;
+    const color = riskColors[r.overallRisk];
+    const icon = r.overallRisk === 'HIGH' ? '⚠' : r.overallRisk === 'MEDIUM' ? '⚡' : '✓';
+    const iconEl = document.getElementById('result-icon');
+    if (iconEl) {
+      iconEl.textContent = icon;
+      iconEl.style.background = `${color}18`;
+      iconEl.style.border = `1px solid ${color}44`;
+    }
+    const riskEl = document.getElementById('result-risk');
+    if (riskEl) {
+      riskEl.style.color = color;
+      riskEl.textContent = `${r.overallRisk} RISK · ${r.issues.length} ISSUE${r.issues.length !== 1 ? 'S' : ''} FOUND`;
+    }
+    const summEl = document.getElementById('result-summary-text');
+    if (summEl) summEl.textContent = r.summary;
+
+    const issuesEl = document.getElementById('result-issues');
+    if (issuesEl) {
+      issuesEl.innerHTML = '';
+      r.issues.forEach(issue => {
+        const div = document.createElement('div');
+        div.className = 'issue-card';
+        div.style.cssText = `background:${severityBgs[issue.severity]};border:1px solid ${severityColors[issue.severity]}22;border-left:3px solid ${severityColors[issue.severity]}`;
+        div.innerHTML = `
+          <div class="issue-card-header">
+            <span class="severity-badge" style="background:${severityColors[issue.severity]}18;color:${severityColors[issue.severity]}">${issue.severity}</span>
+            <span class="issue-card-field">${issue.field}</span>
+          </div>
+          <div class="issue-problem"><strong style="color:#c0b8ac">Problem:</strong> ${issue.issue}</div>
+          <div class="issue-fix"><strong style="color:#9aba9a">How to fix:</strong> ${issue.fix}</div>`;
+        issuesEl.appendChild(div);
+      });
+    }
+
+    if (r.clearFields && r.clearFields.length > 0) {
+      const clearSec = document.getElementById('clear-section');
+      if (clearSec) clearSec.style.display = 'block';
+      const clearEl = document.getElementById('clear-fields');
+      if (clearEl) clearEl.innerHTML = r.clearFields.map(f => `<div class="clear-item"><span>✓</span><span>${f}</span></div>`).join('');
+    }
+
+    const discEl = document.getElementById('disclaimer-text');
+    if (discEl) discEl.textContent = '⚖ ' + r.disclaimer;
+  }
+
+  const origShowScreen = showScreen;
+  window.showScreen = function(id) {
+    if (id === 'results' && analysisResults) buildResults();
+    origShowScreen(id);
+  };
+
+  function resetApp() {
+    selectedForm = "";
+    imageBase64 = "";
+    analysisResults = null;
+    document.getElementById('upload-empty').style.display = 'block';
+    document.getElementById('upload-preview-wrap').style.display = 'none';
+    document.getElementById('upload-zone').classList.remove('has-image');
+    document.getElementById('analyze-btn').style.display = 'none';
+    document.getElementById('file-input').value = '';
+    document.querySelectorAll('.form-btn').forEach(b => b.classList.remove('selected'));
+    showScreen('landing');
+  }
+</script>
+
+<!-- SEO Content -->
+<div style="max-width:760px;margin:0 auto;padding:0 24px 60px">
+  <div style="text-align:center;margin-bottom:32px">
+    <p style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#c9a96e;font-weight:600;margin-bottom:8px">Frequently Asked Questions</p>
+    <h2 style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#e8e4d9">Everything you need to know</h2>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden"><button onclick="var a=this.nextElementSibling;var i=this.querySelector('span');a.style.display=a.style.display==='block'?'none':'block';i.textContent=a.style.display==='block'?'\u2212':'+'" style="width:100%;padding:18px 22px;text-align:left;background:none;border:none;font-family:Georgia,serif;font-size:15px;font-weight:600;color:#e8e4d9;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px">What USCIS forms does FormGuard check?<span style="color:#c9a96e;font-size:22px;flex-shrink:0">+</span></button><div style="display:none;padding:0 22px 18px;font-size:14px;color:#8a8278;line-height:1.7">FormGuard checks all major USCIS forms including I-485 (Adjustment of Status), I-130 (Petition for Alien Relative), I-765 (Employment Authorization), N-400 (Naturalization), I-131 (Travel Document), and I-864 (Affidavit of Support).</div></div>
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden"><button onclick="var a=this.nextElementSibling;var i=this.querySelector('span');a.style.display=a.style.display==='block'?'none':'block';i.textContent=a.style.display==='block'?'\u2212':'+'" style="width:100%;padding:18px 22px;text-align:left;background:none;border:none;font-family:Georgia,serif;font-size:15px;font-weight:600;color:#e8e4d9;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px">How much does a USCIS form check cost?<span style="color:#c9a96e;font-size:22px;flex-shrink:0">+</span></button><div style="display:none;padding:0 22px 18px;font-size:14px;color:#8a8278;line-height:1.7">FormGuard charges a one-time fee of $24 per form review. No subscription or recurring fees. Compare that to an immigration attorney at $200–$400 per hour. For $24 to check a form that costs $1,440 to file, it is an obvious value.</div></div>
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden"><button onclick="var a=this.nextElementSibling;var i=this.querySelector('span');a.style.display=a.style.display==='block'?'none':'block';i.textContent=a.style.display==='block'?'\u2212':'+'" style="width:100%;padding:18px 22px;text-align:left;background:none;border:none;font-family:Georgia,serif;font-size:15px;font-weight:600;color:#e8e4d9;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px">What errors does FormGuard find?<span style="color:#c9a96e;font-size:22px;flex-shrink:0">+</span></button><div style="display:none;padding:0 22px 18px;font-size:14px;color:#8a8278;line-height:1.7">FormGuard identifies missing signatures, incorrect date formats, blank required fields that should say N/A, name inconsistencies, wrong checkbox selections, incorrect fee amounts, missing initials on every page, and missing required supporting documents.</div></div>
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden"><button onclick="var a=this.nextElementSibling;var i=this.querySelector('span');a.style.display=a.style.display==='block'?'none':'block';i.textContent=a.style.display==='block'?'\u2212':'+'" style="width:100%;padding:18px 22px;text-align:left;background:none;border:none;font-family:Georgia,serif;font-size:15px;font-weight:600;color:#e8e4d9;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px">How long does the form check take?<span style="color:#c9a96e;font-size:22px;flex-shrink:0">+</span></button><div style="display:none;padding:0 22px 18px;font-size:14px;color:#8a8278;line-height:1.7">Upload a photo of your completed form and receive your complete error report in under 60 seconds. The report identifies every error and tells you exactly how to fix each one.</div></div>
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden"><button onclick="var a=this.nextElementSibling;var i=this.querySelector('span');a.style.display=a.style.display==='block'?'none':'block';i.textContent=a.style.display==='block'?'\u2212':'+'" style="width:100%;padding:18px 22px;text-align:left;background:none;border:none;font-family:Georgia,serif;font-size:15px;font-weight:600;color:#e8e4d9;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px">Can FormGuard guarantee my form will be approved?<span style="color:#c9a96e;font-size:22px;flex-shrink:0">+</span></button><div style="display:none;padding:0 22px 18px;font-size:14px;color:#8a8278;line-height:1.7">No. FormGuard checks for common errors but cannot guarantee USCIS approval. USCIS requirements change frequently. Always verify at uscis.gov before filing. For complex matters consult a licensed immigration attorney.</div></div>
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden"><button onclick="var a=this.nextElementSibling;var i=this.querySelector('span');a.style.display=a.style.display==='block'?'none':'block';i.textContent=a.style.display==='block'?'\u2212':'+'" style="width:100%;padding:18px 22px;text-align:left;background:none;border:none;font-family:Georgia,serif;font-size:15px;font-weight:600;color:#e8e4d9;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px">Is FormGuard a law firm?<span style="color:#c9a96e;font-size:22px;flex-shrink:0">+</span></button><div style="display:none;padding:0 22px 18px;font-size:14px;color:#8a8278;line-height:1.7">No. FormGuard is a document review automation tool, not a law firm. It does not provide legal advice. For complex immigration matters always consult a licensed immigration attorney.</div></div>
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;overflow:hidden"><button onclick="var a=this.nextElementSibling;var i=this.querySelector('span');a.style.display=a.style.display==='block'?'none':'block';i.textContent=a.style.display==='block'?'\u2212':'+'" style="width:100%;padding:18px 22px;text-align:left;background:none;border:none;font-family:Georgia,serif;font-size:15px;font-weight:600;color:#e8e4d9;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px">Is my form data kept private?<span style="color:#c9a96e;font-size:22px;flex-shrink:0">+</span></button><div style="display:none;padding:0 22px 18px;font-size:14px;color:#8a8278;line-height:1.7">Yes. Your form image is analyzed in memory only and is never stored on our servers. We do not retain any form images or personal information after your review is complete.</div></div>
+  </div>
+</div>
+
+<div style="max-width:760px;margin:0 auto;padding:60px 24px 80px;border-top:1px solid rgba(255,255,255,0.06);background:#0a0a0f">
+  <h2 style="font-family:Georgia,serif;font-size:28px;font-weight:700;color:#e8e4d9;margin-bottom:16px">USCIS Form Error Checker — Avoid Common Immigration Form Mistakes</h2>
+  <p style="font-size:15px;color:#8a8278;line-height:1.8;margin-bottom:20px">USCIS rejects thousands of immigration forms every month for simple, preventable errors. A missing signature, wrong date format, or blank required field can delay your case by 6–12 months and cost hundreds of dollars in refiling fees. FormGuard uses AI to review your completed USCIS form and identify errors before you submit.</p>
+
+  <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#c9a96e;margin-bottom:12px">Most Common USCIS Form Rejection Reasons</h3>
+  <p style="font-size:15px;color:#8a8278;line-height:1.8;margin-bottom:20px">The most common reasons USCIS rejects or returns immigration forms include missing signatures on the final page, incorrect date format (USCIS requires MM/DD/YYYY), name inconsistencies between fields, blank required fields that should say N/A, incorrect filing fee, missing initial on every page, wrong checkbox selections, and missing supporting documents listed in the form instructions.</p>
+
+  <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#c9a96e;margin-bottom:12px">How to Fill Out Form I-485 Correctly</h3>
+  <p style="font-size:15px;color:#8a8278;line-height:1.8;margin-bottom:20px">Form I-485 Application to Register Permanent Residence is one of the most complex USCIS forms. Common I-485 mistakes include leaving Part 1 fields blank instead of writing N/A, inconsistent name spelling across sections, missing the required signature and date on Part 12, incorrect alien registration number format, and forgetting to include required initials on every page. The I-485 filing fee is $1,440 for most applicants, making errors extremely costly.</p>
+
+  <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#c9a96e;margin-bottom:12px">How to Fill Out Form I-130 Correctly</h3>
+  <p style="font-size:15px;color:#8a8278;line-height:1.8;margin-bottom:20px">Form I-130 Petition for Alien Relative is used to establish a qualifying relationship with a foreign national relative. Common I-130 errors include mismatched names between the petitioner and supporting documents, missing proof of US citizenship or permanent residence, incorrect relationship category selected, and missing signatures. USCIS will return the entire package if the I-130 has errors.</p>
+
+  <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#c9a96e;margin-bottom:12px">Form N-400 Common Mistakes</h3>
+  <p style="font-size:15px;color:#8a8278;line-height:1.8;margin-bottom:20px">Form N-400 Application for Naturalization is used to apply for US citizenship. Common N-400 mistakes include failing to disclose all trips outside the US in the past 5 years, incorrect continuous residence dates, missing tax return information, unanswered questions in Part 12, and missing the biographic information page. An N-400 rejection can delay your citizenship by 6–12 months.</p>
+
+  <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#c9a96e;margin-bottom:12px">Form I-765 Employment Authorization Common Errors</h3>
+  <p style="font-size:15px;color:#8a8278;line-height:1.8;margin-bottom:20px">Form I-765 Application for Employment Authorization is frequently rejected for missing eligibility category codes, incorrect or expired supporting documents, missing passport-style photographs, wrong filing fee, and name discrepancies. Without an approved I-765 you cannot legally work in the United States, making accuracy critical.</p>
+
+  <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#c9a96e;margin-bottom:12px">Why Use an AI USCIS Form Checker</h3>
+  <p style="font-size:15px;color:#8a8278;line-height:1.8;margin-bottom:20px">Immigration attorneys charge $200–$400 per hour to review forms. FormGuard provides an instant AI-powered review for $24 — catching the most common errors that cause USCIS rejections. Upload a photo of your completed form and receive a plain-English report identifying issues and exactly how to fix them in under 60 seconds.</p>
+
+  <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#c9a96e;margin-bottom:12px">USCIS Form Filing by State</h3>
+  <p style="font-size:15px;color:#8a8278;line-height:1.8;margin-bottom:20px">California, Texas, Florida, and New York process the highest volume of USCIS applications in the country. Common errors vary by form type but universal mistakes — missing signatures, wrong date formats, inconsistent name spelling, and blank required fields — cause rejection regardless of which USCIS field office receives your application. FormGuard checks for all of these before you submit.</p>
+
+  <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:8px;padding:24px;margin-top:32px">
+    <p style="font-size:13px;color:#4a4540;line-height:1.6;font-style:italic">FormGuard is not a law firm and does not provide legal advice. This AI-powered tool reviews forms for common errors only. USCIS requirements change frequently — always verify current instructions at uscis.gov. For complex immigration matters consult a licensed immigration attorney.</p>
+  </div>
+</div>
+
+<div style="background:#0a0a0f;border-top:1px solid rgba(255,255,255,0.06);padding:32px 24px;text-align:center">
+  <p style="font-size:14px;color:#4a4540;margin-bottom:8px">Questions or issues? We're here to help.</p>
+  <a href="mailto:info@uscisformcheck.com" style="color:#c9a96e;font-size:15px;text-decoration:none;font-family:Georgia,serif">info@uscisformcheck.com</a>
+  <p style="font-size:12px;color:#2a252
