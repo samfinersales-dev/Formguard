@@ -86,12 +86,6 @@ Output ONLY a JSON object with these exact fields:
     const jsonEnd = response.lastIndexOf('}');
     if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON in response: ' + response.slice(0,100));
     let clean = response.slice(jsonStart, jsonEnd + 1);
-    clean = clean.replace(/[�--]/g, '');
-    clean = clean.replace(/"([^"\]*(\.[^"\]*)*)"/g, function(match) {
-      return match.replace(/
-/g, '\n').replace(/
-/g, '\r').replace(/	/g, '\t');
-    });
     const data = JSON.parse(clean);
     console.log(`✅ Topic selected: "${data.title}"`);
     console.log(`   Slug: ${data.slug}`);
@@ -164,14 +158,6 @@ You MUST respond with ONLY a raw JSON object. No preamble, no explanation, no ma
     let clean = response.slice(jsonStart, jsonEnd + 1);
     
     // Robust JSON repair: fix common Claude JSON issues
-    // 1. Remove control characters
-    clean = clean.replace(/[�--]/g, '');
-    // 2. Fix unescaped newlines inside strings - replace literal newlines between quotes
-    clean = clean.replace(/"([^"\]*(\.[^"\]*)*)"/g, function(match) {
-      return match.replace(/
-/g, '\n').replace(/
-/g, '\r').replace(/	/g, '\t');
-    });
     
     let article;
     try {
