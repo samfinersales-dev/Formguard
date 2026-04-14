@@ -85,7 +85,13 @@ Output ONLY a JSON object with these exact fields:
     const jsonStart = response.indexOf('{');
     const jsonEnd = response.lastIndexOf('}');
     if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON in response: ' + response.slice(0,100));
-    const clean = response.slice(jsonStart, jsonEnd + 1);
+    let clean = response.slice(jsonStart, jsonEnd + 1);
+    clean = clean.replace(/[�--]/g, '');
+    clean = clean.replace(/"([^"\]*(\.[^"\]*)*)"/g, function(match) {
+      return match.replace(/
+/g, '\n').replace(/
+/g, '\r').replace(/	/g, '\t');
+    });
     const data = JSON.parse(clean);
     console.log(`✅ Topic selected: "${data.title}"`);
     console.log(`   Slug: ${data.slug}`);
@@ -122,6 +128,7 @@ CRITICAL ACCURACY RULES:
 5. Write for ${SITE_CONFIG.targetAudience} — practical, specific, actionable
 6. 1,200–1,800 words total
 7. Natural CTA near the end linking to ${SITE_CONFIG.ctaUrl}: "${SITE_CONFIG.ctaText}"
+8. CRITICAL: In your JSON response, escape all apostrophes as \' and all double quotes inside string values as \". Never include raw newlines inside JSON string values — use \n instead. Keep section content as a single string with \n for line breaks.
 8. Plain English. No jargon without explanation.
 
 You MUST respond with ONLY a raw JSON object. No preamble, no explanation, no markdown, no code fences. Start your response with { and end with }.
@@ -133,14 +140,14 @@ You MUST respond with ONLY a raw JSON object. No preamble, no explanation, no ma
   "datePublished": "${today}",
   "targetKeyword": "${topic.targetKeyword}",
   "wordCount": approximate_word_count_as_number,
-  "intro": "2-3 sentence intro paragraph",
+  "intro": "2-3 sentence intro as plain text, no HTML",
   "sections": [
     {
       "heading": "H2 heading text",
-      "content": "Full section content as HTML paragraphs. Use <p>, <ul>, <li>, <strong> only. No H tags inside content."
+      "body": "Full section as plain text. Double newline between paragraphs. Start list items with a hyphen. No HTML tags whatsoever."
     }
   ],
-  "conclusion": "Concluding paragraph with CTA",
+  "conclusion": "Concluding paragraph as plain text, no HTML",
   "faqSchema": [
     {"question": "Q from article", "answer": "Full answer matching article content"},
     {"question": "Q from article", "answer": "Full answer"},
@@ -154,8 +161,28 @@ You MUST respond with ONLY a raw JSON object. No preamble, no explanation, no ma
     const jsonStart = response.indexOf('{');
     const jsonEnd = response.lastIndexOf('}');
     if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON in response: ' + response.slice(0,100));
-    const clean = response.slice(jsonStart, jsonEnd + 1);
-    const article = JSON.parse(clean);
+    let clean = response.slice(jsonStart, jsonEnd + 1);
+    
+    // Robust JSON repair: fix common Claude JSON issues
+    // 1. Remove control characters
+    clean = clean.replace(/[�--]/g, '');
+    // 2. Fix unescaped newlines inside strings - replace literal newlines between quotes
+    clean = clean.replace(/"([^"\]*(\.[^"\]*)*)"/g, function(match) {
+      return match.replace(/
+/g, '\n').replace(/
+/g, '\r').replace(/	/g, '\t');
+    });
+    
+    let article;
+    try {
+      article = JSON.parse(clean);
+    } catch(e) {
+      // Last resort: ask Claude to fix its own JSON
+      console.error('JSON parse failed, attempting recovery...');
+      console.error('Error at:', e.message);
+      console.error('Context around position:', clean.slice(Math.max(0, parseInt(e.message.match(/position (\d+)/)?.[1] || 0) - 50), parseInt(e.message.match(/position (\d+)/)?.[1] || 0) + 50));
+      throw new Error('Article JSON parse failed: ' + e.message);
+    }
     console.log(`✅ Article written: ~${article.wordCount} words`);
     return article;
   } catch(e) {
@@ -166,11 +193,25 @@ You MUST respond with ONLY a raw JSON object. No preamble, no explanation, no ma
 
 // ── STEP 3: RENDER ARTICLE TO HTML ───────────────────────────────────────────
 function renderHTML(article) {
-  const sectionsHTML = article.sections.map(s => `
+  const sectionsHTML = article.sections.map(s => {
+    // Convert plain text to HTML paragraphs
+    const body = s.body || s.content || '';
+    const paragraphs = body.split(/\n\n+/).map(para => {
+      para = para.trim();
+      if (!para) return '';
+      // Check if it's a list (lines starting with -)
+      if (para.includes('\n-') || para.startsWith('-')) {
+        const items = para.split('\n').filter(l => l.trim()).map(l => `<li>${l.replace(/^-\s*/, '')}</li>`).join('');
+        return `<ul>${items}</ul>`;
+      }
+      return `<p>${para}</p>`;
+    }).filter(Boolean).join('\n');
+    return `
     <section class="article-section">
       <h2>${s.heading}</h2>
-      ${s.content}
-    </section>`).join('\n');
+      ${paragraphs}
+    </section>`;
+  }).join('\n');
 
   const faqItemsHTML = article.faqSchema.map(f => `
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
