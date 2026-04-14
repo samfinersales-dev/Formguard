@@ -78,7 +78,9 @@ async function pickTopic() {
   var doState = supportsStateSpecific && (weekNum % 2 === 0);
   var state = states[weekNum % states.length];
   var year = new Date().getFullYear();
-  var stateNote = doState ? ('Focus on ' + state + '-specific rules and figures.') : 'Write a general evergreen article.';
+  var stateNote = doState 
+    ? ('Focus on ' + state + '-specific rules and figures. Search for the most current ' + state + ' regulations.')
+    : 'Search for recent news, regulatory changes, or trending topics in this space from the last 30 days. Prioritise timely topics over evergreen ones when breaking news exists.';
 
   var prompt = 'You are an SEO writer for ' + SITE_CONFIG.siteName + ' (' + SITE_CONFIG.domain + ').\n' +
     'Product: ' + SITE_CONFIG.productDesc + '\n' +
@@ -96,9 +98,10 @@ async function pickTopic() {
     'H2C: [section 3 heading]\n' +
     'H2D: [section 4 heading]\n' +
     'H2E: [section 5 heading]\n\n' +
+    'IMPORTANT: Search for recent developments first. If there is breaking news, a regulatory change, or a trending topic in this space from the last 30 days, prioritise that over evergreen topics.\n\n' +
     'No preamble. No explanation. Just those 9 lines.';
 
-  var response = await callClaude(prompt, 'claude-haiku-4-5-20251001', false);
+  var response = await callClaude(prompt, 'claude-sonnet-4-6', true);
   console.log('Raw topic response:\n' + response.slice(0,200));
 
   var get = function(key) {
