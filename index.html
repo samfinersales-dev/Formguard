@@ -211,6 +211,84 @@ function triggerFormGuardDownload() {
   }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<link rel="icon" type="image/png" sizes="32x32" href="https://uscisformcheck.com/logo.png">
+<link rel="icon" type="image/png" sizes="192x192" href="https://uscisformcheck.com/logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://uscisformcheck.com/logo.png">
+<link rel="shortcut icon" href="https://uscisformcheck.com/logo.png">
+
+<meta property="og:image" content="https://uscisformcheck.com/logo.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta name="twitter:image" content="https://uscisformcheck.com/logo.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "FormGuard",
+  "url": "https://uscisformcheck.com/",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://uscisformcheck.com/logo.png",
+    "width": 512,
+    "height": 512
+  },
+  "description": "AI-powered USCIS immigration form error checker. Catches mistakes on I-485, I-130, I-765, N-400 and other forms before USCIS rejects your application."
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to check your USCIS form for errors",
+  "description": "Upload your completed USCIS form and receive an instant AI-generated error report covering missing signatures, blank fields, date format issues, and more.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Choose your USCIS form",
+      "text": "Select the form you completed \u2014 I-485, I-130, I-765, N-400, I-131, I-864, or another supported form."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Upload a photo of your form",
+      "text": "Take a clear photo of each page of your completed form and upload it. Your image is analyzed in memory and never stored."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Review the error report",
+      "text": "Receive a line-by-line report of missing signatures, blank required fields, date format issues, name inconsistencies, and other common errors."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Fix and file with USCIS",
+      "text": "Correct the flagged issues, then submit your form to USCIS through the official channel at uscis.gov."
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "FormGuard",
+  "url": "https://uscisformcheck.com/",
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [
+      "h1",
+      "h2",
+      ".hero-sub"
+    ]
+  }
+}
+</script>
 </head>
 <body>
 
@@ -237,8 +315,8 @@ function triggerFormGuardDownload() {
       <div style="margin-top:16px;font-size:13px;color:#4a4540">Pay only after you see the issues found</div>
     </div>
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-n">~30%</div><div class="stat-label">of USCIS forms returned for corrections</div></div>
-      <div class="stat-card"><div class="stat-n">$500+</div><div class="stat-label">average cost of a rejected application</div></div>
+      <div class="stat-card"><div class="stat-n">$1,440</div><div class="stat-label">filing fee for I-485 — lost if rejected for fixable errors</div></div>
+      <div class="stat-card"><div class="stat-n">12+</div><div class="stat-label">common rejection causes our AI checks for</div></div>
       <div class="stat-card"><div class="stat-n">60s</div><div class="stat-label">average time for our review</div></div>
     </div>
     <div class="rejection-box">
@@ -343,21 +421,49 @@ function triggerFormGuardDownload() {
     <div class="paywall-note">One-time payment · Instant access · No subscription</div>
     <div class="paywall-compare">Compare to $200–$400/hr for an immigration attorney</div>
     <div class="section-label" style="margin-top:32px">Issues to fix before submitting</div>
-    <div id="result-issues" style="margin-bottom:36px">
+    <div id="paywall-result-issues" style="margin-bottom:36px">
   <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1)">
     <button onclick="triggerFormGuardDownload()" style="width:100%;background:#c9a84c;color:#0a1628;font-weight:700;padding:13px;border-radius:6px;border:none;cursor:pointer;font-size:.9rem;font-family:inherit;">
       ⬇ Download Full Error Report (PDF)
     </button>
     <p style="font-size:.72rem;color:rgba(255,255,255,.4);text-align:center;margin-top:6px">Plain-English report + correction instructions for every issue found</p>
   </div></div>
-    <div id="clear-section" style="display:none">
+    <div id="paywall-clear-section" style="display:none">
       <div class="section-label">Sections that look good ✓</div>
-      <div class="clear-box" id="clear-fields"></div>
+      <div class="clear-box" id="paywall-clear-fields"></div>
     </div>
-    <div class="disclaimer-box"><div class="disclaimer-text" id="disclaimer-text"></div></div>
+    <div class="disclaimer-box"><div class="disclaimer-text" id="paywall-disclaimer-text"></div></div>
     <button class="btn-secondary" onclick="resetApp()">Check Another Form</button>
+
+  
   </main>
 </div>
+
+<!-- RESULTS (post-payment) -->
+  <div id="screen-results" class="screen">
+    <div class="paywall-banner" id="result-banner" style="background:rgba(0,200,83,.08);border:1px solid rgba(0,200,83,.33);border-radius:8px;padding:16px;margin-bottom:24px;display:flex;align-items:center;gap:14px">
+      <div id="result-icon" style="width:40px;height:40px;border-radius:50%;background:rgba(0,200,83,.18);border:1px solid rgba(0,200,83,.44);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">✓</div>
+      <div>
+        <div id="result-risk" style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#00c853">PAYMENT CONFIRMED — FULL REPORT</div>
+        <div id="result-summary-text" style="font-size:14px;color:#c0b8ac;margin-top:4px">Your full USCIS form review is below.</div>
+      </div>
+    </div>
+
+    <div id="result-issues" style="margin-bottom:24px"></div>
+
+    <div id="clear-section" style="display:none;margin-bottom:24px">
+      <h3 style="font-size:14px;color:#9aba9a;margin-bottom:10px">Looks good</h3>
+      <div id="clear-fields"></div>
+    </div>
+
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1)">
+      <button onclick="triggerFormGuardDownload()" style="width:100%;background:#c9a84c;color:#0a1628;font-weight:700;padding:13px;border-radius:6px;border:none;cursor:pointer;font-size:15px">⬇ Download Full Report (PDF)</button>
+    </div>
+
+    <div class="disclaimer-text" id="disclaimer-text" style="font-size:12px;color:#7a7560;margin-top:18px;font-style:italic"></div>
+
+    <button class="btn-secondary" onclick="resetApp()" style="margin-top:18px">Check Another Form</button>
+  </div>
 
 <script>
 var _rl = {c:0, t:Date.now()};
@@ -542,6 +648,36 @@ Use severity CRITICAL for things that will definitely cause rejection, WARNING f
     document.querySelectorAll('.form-btn').forEach(b => b.classList.remove('selected'));
     showScreen('landing');
   }
+
+
+  // Post-payment return handler
+  // After Stripe redirects user back to /?paid=true, show the full results screen
+  (function checkPaidReturn() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('paid') === 'true') {
+        var saved = sessionStorage.getItem('fg_results');
+        if (saved) {
+          try { analysisResults = JSON.parse(saved); } catch(e) {}
+        }
+        if (analysisResults) {
+          buildResults();
+          var disc = document.getElementById('disclaimer-text');
+          if (disc && analysisResults.disclaimer) disc.textContent = '⚠ ' + analysisResults.disclaimer;
+        }
+        // Clean URL and show results
+        window.history.replaceState({}, '', window.location.pathname);
+        showScreen('results');
+      }
+    } catch(e) { console.warn('paid return handler error', e); }
+  })();
+
+  // Save analysis to sessionStorage when paywall is shown so it survives Stripe redirect
+  var origBuildPaywall = buildPaywall;
+  buildPaywall = function() {
+    origBuildPaywall();
+    try { if (analysisResults) sessionStorage.setItem('fg_results', JSON.stringify(analysisResults)); } catch(e) {}
+  };
 
 // —— DOWNLOAD REPORT ————————————————————————————————————————
 function buildReportText() {
