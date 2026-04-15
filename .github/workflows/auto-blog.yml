@@ -2,7 +2,7 @@ name: Auto Blog Post Generator
 
 on:
   schedule:
-    - cron: '0 8 * * 1'  # Every Monday at 8am UTC
+    - cron: '0 8 * * 1,4'  # Every Monday and Thursday at 8am UTC
   workflow_dispatch:       # Manual trigger from GitHub Actions tab
 
 jobs:
@@ -39,6 +39,7 @@ jobs:
           PRODUCT_DESC:       ${{ vars.PRODUCT_DESC }}
           CTA_TEXT:           ${{ vars.CTA_TEXT }}
           PRIMARY_COLOR:      ${{ vars.PRIMARY_COLOR }}
+          ACCENT_COLOR:       ${{ vars.ACCENT_COLOR }}
         run: node generate-blog-post.js
 
       - name: Cleanup
