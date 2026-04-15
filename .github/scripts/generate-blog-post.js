@@ -78,7 +78,16 @@ async function pickTopic() {
   var doState = supportsStateSpecific && (weekNum % 2 === 0);
   var state = states[weekNum % states.length];
   var year = new Date().getFullYear();
-  var stateNote = doState 
+  // Check what states have been recently written about
+var recentFiles = [];
+try { recentFiles = require('fs').readdirSync(SITE_CONFIG.blogPath || 'blog').filter(function(f){return f.endsWith('.html');}); } catch(e) {}
+var stateAlreadyCovered = recentFiles.some(function(f){ return f.toLowerCase().includes(state.toLowerCase().replace(' ','-')); });
+if (stateAlreadyCovered) {
+  // Pick a different state
+  state = states[(weekNum + 7) % states.length];
+  console.log('State already covered, switching to: ' + state);
+}
+var stateNote = doState 
     ? ('Focus on ' + state + '-specific rules and figures. Search for the most current ' + state + ' regulations.')
     : 'Search for recent news, regulatory changes, or trending topics in this space from the last 30 days. Prioritise timely topics over evergreen ones when breaking news exists.';
 
@@ -87,8 +96,7 @@ async function pickTopic() {
     'Audience: ' + SITE_CONFIG.targetAudience + '\n' +
     'Topic area: ' + SITE_CONFIG.topicArea + '\n' +
     stateNote + '\n\n' +
-    'Choose ONE specific blog topic with high search volume and clear how-to intent.\n\n' +
-    'Current year: ' + year + '. Do NOT include a year number in the TITLE.\nYOU MUST RESPOND WITH ONLY THESE LINES AND NOTHING ELSE:\n' +
+    'Choose ONE specific topic. Current year: ' + year + '. No year in TITLE.\nRespond with ONLY these 9 lines, nothing else:\n' +
     'TITLE: [title here]\n' +
     'SLUG: [slug-here]\n' +
     'META: [155 char description]\n' +
@@ -98,7 +106,7 @@ async function pickTopic() {
     'H2C: [section 3 heading]\n' +
     'H2D: [section 4 heading]\n' +
     'H2E: [section 5 heading]\n\n' +
-    'IMPORTANT: Search for recent developments first. If there is breaking news, a regulatory change, or a trending topic in this space from the last 30 days, prioritise that over evergreen topics.\n\n' +
+    'IMPORTANT: The current year is ' + new Date().getFullYear() + '. Never reference past years as current. Search for recent developments first. If there is breaking news, a regulatory change, or a trending topic in this space from the last 30 days, prioritise that over evergreen topics.\n\n' +
     'No preamble. No explanation. Just those 9 lines.';
 
   var response = await callClaude(prompt, 'claude-sonnet-4-6', true);
@@ -121,6 +129,17 @@ async function pickTopic() {
     throw new Error('Could not parse topic. Response was:\n' + response);
   }
   console.log('Topic: ' + topic.title);
+  
+  // Check if this slug was already published recently
+  var blogDir = SITE_CONFIG.blogPath;
+  var slugFile = blogDir + '/' + topic.slug + '.html';
+  if (require('fs').existsSync(slugFile)) {
+    console.log('Slug already exists: ' + topic.slug + ' — picking a different angle');
+    // Modify the slug slightly to force a different article
+    topic.slug = topic.slug + '-guide';
+    topic.title = topic.title + ': Complete Guide';
+  }
+  
   return topic;
 }
 
@@ -130,7 +149,7 @@ async function writeArticle(topic) {
   var today = new Date().toISOString().split('T')[0];
 
   var sectionBlocks = topic.sections.map(function(h) {
-    return 'SECTION\nHEADING: ' + h + '\nWrite 150-200 words of plain text here. Separate paragraphs with blank lines. Start list items with "- ". No HTML.\nENDSECTION';
+    return 'SECTION\nHEADING: ' + h + '\nWrite 100-150 words plain text. Separate paragraphs with blank lines. Start list items with "- ". No HTML.\nENDSECTION';
   }).join('\n\n');
 
   var prompt = 'Write a blog article for ' + SITE_CONFIG.siteName + '.\n\n' +
@@ -143,7 +162,7 @@ async function writeArticle(topic) {
     'CONCLUSION\n[Write 2 sentence conclusion with CTA]\nENDCONCLUSION\n\n' +
     'FAQ\nQ: [question 1]\nA: [answer 1]\n\nQ: [question 2]\nA: [answer 2]\n\nQ: [question 3]\nA: [answer 3]\nENDFAQ';
 
-  var response = await callClaude(prompt, 'claude-sonnet-4-6', true);
+  var response = await callClaude(prompt, 'claude-sonnet-4-6', false);
 
   var article = { title: topic.title, slug: topic.slug, meta: topic.meta, keyword: topic.keyword, date: today };
 
@@ -192,7 +211,10 @@ function buildHTML(a) {
       if (!para) return '';
       var lines = para.split('\n');
       if (lines.some(function(l){return l.trim().startsWith('-');})) {
-        return '<ul>' + lines.filter(Boolean).map(function(l){
+        var intro = lines.filter(function(l){ return l.trim() && !l.trim().startsWith('-'); });
+        var items = lines.filter(function(l){ return l.trim().startsWith('-'); });
+        var introHtml = intro.length ? '<p>' + intro.join(' ') + '</p>' : '';
+        return introHtml + '<ul>' + items.map(function(l){
           return '<li>' + l.replace(/^-\s*/,'') + '</li>';
         }).join('') + '</ul>';
       }
@@ -267,8 +289,8 @@ function buildHTML(a) {
     '.article-body .s h2{font-family:"Playfair Display",serif;font-size:1.45rem;font-weight:600;color:var(--ink);margin-bottom:16px;letter-spacing:-.01em;position:relative;padding-left:16px}',
     '.article-body .s h2::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--gold);border-radius:2px}',
     '.article-body .s p{margin-bottom:16px;color:#333;line-height:1.8}',
-    '.article-body .s ul{padding-left:0;margin-bottom:16px;list-style:none}',
-    '.article-body .s li{padding:10px 0 10px 28px;position:relative;color:#333;border-bottom:1px solid var(--rule);line-height:1.7}',
+    '.article-body .s ul{padding-left:0;margin-bottom:16px;list-style:none;margin-left:0}',
+    '.article-body .s li{padding:10px 0 10px 28px;position:relative;color:#333;border-bottom:1px solid var(--rule);line-height:1.7;list-style:none}',
     '.article-body .s li:last-child{border-bottom:none}',
     '.article-body .s li::before{content:"";position:absolute;left:0;top:19px;width:10px;height:10px;border-radius:50%;background:var(--gold);opacity:.7}',
 
