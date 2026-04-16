@@ -811,28 +811,53 @@ Use severity CRITICAL for things that will definitely cause rejection, WARNING f
 
 
   // Post-payment return handler
-  // After Stripe redirects user back to /?paid=true, show the full results screen
-  (function checkPaidReturn() {
+  // After Stripe redirects user back to /?session_id=cs_xxx, verify with Stripe
+  (async function checkPaidReturn() {
     try {
       var params = new URLSearchParams(window.location.search);
-      if (params.get('paid') === 'true') {
-        var saved = sessionStorage.getItem('fg_results');
-        if (saved) {
-          try { analysisResults = JSON.parse(saved); } catch(e) {}
-        }
-        if (analysisResults) {
-          buildResults();
-          var disc = document.getElementById('disclaimer-text');
-          if (disc && analysisResults.disclaimer) disc.textContent = '⚠ ' + analysisResults.disclaimer;
-        }
-        // Clean URL and show results
-        window.history.replaceState({}, '', window.location.pathname);
+      var sessionId = params.get('session_id');
+      if (!sessionId) return;
+
+      // Clean URL immediately
+      window.history.replaceState({}, '', window.location.pathname);
+
+      // Show loading
+      showScreen('checking');
+
+      // Verify with Stripe via our server
+      var vr = await fetch('/.netlify/functions/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sessionId })
+      });
+      var vd = await vr.json();
+
+      if (!vd.paid) {
+        alert('Payment could not be verified. If you completed payment, please contact support.');
+        showScreen('landing');
+        return;
+      }
+
+      // Payment verified — restore analysis and show results
+      var saved = sessionStorage.getItem('fg_results');
+      if (saved) {
+        try { analysisResults = JSON.parse(saved); } catch(e) {}
+      }
+      if (analysisResults) {
+        buildResults();
+        var disc = document.getElementById('disclaimer-text');
+        if (disc && analysisResults.disclaimer) disc.textContent = '⚠ ' + analysisResults.disclaimer;
         showScreen('results');
+      } else {
+        // Results expired from sessionStorage — need to re-upload
+        alert('Session expired. Please upload your form again.');
+        showScreen('landing');
       }
     } catch(e) { console.warn('paid return handler error', e); }
   })();
 
   // Save analysis to sessionStorage when paywall is shown so it survives Stripe redirect
+  // Note: this is OK because the content can only be shown after verify-payment confirms
   var origBuildPaywall = buildPaywall;
   buildPaywall = function() {
     origBuildPaywall();
