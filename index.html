@@ -20,15 +20,17 @@ function triggerFormGuardDownload() {
   var fnEl=document.getElementById('form-name-checking')||document.getElementById('form-name-upload');
   var report={formName:fnEl?fnEl.textContent.trim():'USCIS Form',formVersion:'Latest edition',totalFields:0,errors:[],warnings:[]};
   if(el){var items=el.querySelectorAll('.issue-card');items.forEach(function(it,i){var field=it.querySelector('.issue-card-field');var prob=it.querySelector('.issue-problem');var fix=it.querySelector('.issue-fix');report.errors.push({field:field?field.textContent.trim():'Field '+(i+1),part:'',item:'',issue:prob?prob.textContent.trim():'',fix:fix?fix.textContent.trim():''});});report.totalFields=Math.max(report.errors.length+5,10);}
-  if(typeof DownloadModule!=='undefined' && DownloadModule.downloadFormGuardReport){
-    DownloadModule.downloadFormGuardReport(report);
-  } else {
-    // Fallback: download as text
-    var lines = ['FORMGUARD — USCIS FORM CHECK REPORT','======================================','Form: '+report.formName,'Date: '+new Date().toLocaleDateString(),''];
-    if(report.errors.length>0){lines.push('ISSUES FOUND:','');report.errors.forEach(function(e,i){lines.push((i+1)+'. '+e.field);if(e.issue)lines.push('   Issue: '+e.issue);if(e.fix)lines.push('   Fix: '+e.fix);lines.push('');});}
-    lines.push('---','FormGuard — uscisformcheck.com','For informational purposes only. Not legal or immigration advice.');
-    var blob=new Blob([lines.join('\n')],{type:'text/plain'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='formguard-report-'+new Date().toISOString().slice(0,10)+'.txt';a.click();URL.revokeObjectURL(url);
-  }
+  try {
+    if(typeof DownloadModule!=='undefined' && DownloadModule.downloadFormGuardReport){
+      DownloadModule.downloadFormGuardReport(report);
+      return;
+    }
+  } catch(e) { console.error('PDF download error:', e); }
+  // Fallback: always download as text if PDF fails
+  var lines = ['FORMGUARD — USCIS FORM CHECK REPORT','======================================','Form: '+report.formName,'Date: '+new Date().toLocaleDateString(),''];
+  if(report.errors.length>0){lines.push('ISSUES FOUND ('+report.errors.length+'):','');report.errors.forEach(function(e,i){lines.push((i+1)+'. '+e.field);if(e.issue)lines.push('   Problem: '+e.issue);if(e.fix)lines.push('   Fix: '+e.fix);lines.push('');});}else{lines.push('No critical issues found.','');}
+  lines.push('---','FormGuard — uscisformcheck.com','For informational purposes only. Not legal or immigration advice.');
+  var blob=new Blob([lines.join('\n')],{type:'text/plain'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='formguard-report-'+new Date().toISOString().slice(0,10)+'.txt';a.click();URL.revokeObjectURL(url);
 }
 </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What USCIS forms does FormGuard check?","acceptedAnswer":{"@type":"Answer","text":"FormGuard checks I-485, I-130, I-765, N-400, I-131, and I-864. Upload a photo and receive an instant error report."}},{"@type":"Question","name":"How much does a USCIS form check cost?","acceptedAnswer":{"@type":"Answer","text":"FormGuard charges a one-time fee of $24 per form review. No subscription or recurring fees."}},{"@type":"Question","name":"What errors does FormGuard find?","acceptedAnswer":{"@type":"Answer","text":"Missing signatures, incorrect date formats, blank required fields, name inconsistencies, wrong checkboxes, incorrect fee amounts, and missing initials."}},{"@type":"Question","name":"How long does the form check take?","acceptedAnswer":{"@type":"Answer","text":"Upload your form photo and receive your complete error report in under 60 seconds."}},{"@type":"Question","name":"Can FormGuard guarantee my form will be approved?","acceptedAnswer":{"@type":"Answer","text":"No. FormGuard checks for common errors but cannot guarantee USCIS approval. Always verify at uscis.gov before filing."}},{"@type":"Question","name":"Is FormGuard a law firm?","acceptedAnswer":{"@type":"Answer","text":"No. FormGuard is a document review tool, not a law firm. It does not provide legal advice."}},{"@type":"Question","name":"Is my form data kept private?","acceptedAnswer":{"@type":"Answer","text":"Yes. Your form image is analyzed in memory and never stored on our servers. We do not retain any form data."}},{"@type":"Question","name":"What if USCIS requirements have changed?","acceptedAnswer":{"@type":"Answer","text":"USCIS updates form requirements frequently. FormGuard reflects current instructions but you should always verify at uscis.gov before submitting. For complex cases consult a licensed immigration attorney."}}]}</script>
