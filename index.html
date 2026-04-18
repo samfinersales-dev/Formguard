@@ -673,18 +673,19 @@ function checkLimit() {
       imageMediaType = isPDF ? 'application/pdf' : (file.type || 'image/jpeg');
       document.getElementById('upload-empty').style.display = 'none';
       document.getElementById('upload-preview-wrap').style.display = 'block';
+      const preview = document.getElementById('upload-preview');
+      const confirm = document.querySelector('.upload-confirm');
       if (isPDF) {
-        document.getElementById('upload-preview').style.display = 'none';
-        document.getElementById('upload-confirm').textContent = '✓ ' + file.name + ' ready to check';
-        document.getElementById('upload-confirm').style.display = 'block';
+        if (preview) preview.style.display = 'none';
+        if (confirm) confirm.textContent = '✓ ' + file.name + ' — ready to check';
       } else {
-        document.getElementById('upload-preview').style.display = 'block';
-        document.getElementById('upload-preview').src = e.target.result;
-        document.getElementById('upload-confirm').textContent = '✓ ' + file.name;
+        if (preview) { preview.style.display = 'block'; preview.src = e.target.result; }
+        if (confirm) confirm.textContent = '✓ Form uploaded · tap to change';
       }
       document.getElementById('upload-zone').classList.add('has-image');
       document.getElementById('analyze-btn').style.display = 'block';
     };
+    reader.onerror = function() { alert('Could not read file. Please try a different file.'); };
     reader.readAsDataURL(file);
   }
 
