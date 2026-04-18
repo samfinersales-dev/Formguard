@@ -544,14 +544,14 @@ function triggerFormGuardDownload() {
       <div id="upload-empty">
         <div class="upload-icon">📋</div>
         <div class="upload-text">Tap to upload or take photo</div>
-        <div class="upload-hint">JPG, PNG · iPhone camera works great</div>
+        <div class="upload-hint">PDF, JPG, PNG · Photo or scanned document</div>
       </div>
       <div id="upload-preview-wrap" style="display:none">
         <img id="upload-preview" class="upload-preview" alt="Form preview">
         <div class="upload-confirm">✓ Form uploaded · tap to change</div>
       </div>
     </div>
-    <input type="file" id="file-input" accept="image/*" capture="environment" style="display:none" onchange="handleUpload(this)">
+    <input type="file" id="file-input" accept="image/*,application/pdf" style="display:none" onchange="handleUpload(this)">
     <button class="btn-primary btn-full" id="analyze-btn" style="display:none" onclick="runCheck()">Analyze My Form →</button>
     <div class="trust-row">
       <div class="trust-item">🔒 Your data stays private</div>
@@ -642,6 +642,7 @@ function checkLimit() {
 
   let selectedForm = "";
   let imageBase64 = "";
+  let imageMediaType = "image/jpeg";
   let analysisResults = null;
 
   const riskColors = { HIGH: "#ff4444", MEDIUM: "#ff9800", LOW: "#00c853" };
@@ -666,11 +667,21 @@ function checkLimit() {
     const file = input.files[0];
     if (!file) return;
     const reader = new FileReader();
+    const isPDF = file.type === 'application/pdf';
     reader.onload = (e) => {
       imageBase64 = e.target.result.split(',')[1];
+      imageMediaType = isPDF ? 'application/pdf' : (file.type || 'image/jpeg');
       document.getElementById('upload-empty').style.display = 'none';
       document.getElementById('upload-preview-wrap').style.display = 'block';
-      document.getElementById('upload-preview').src = e.target.result;
+      if (isPDF) {
+        document.getElementById('upload-preview').style.display = 'none';
+        document.getElementById('upload-confirm').textContent = '✓ ' + file.name + ' ready to check';
+        document.getElementById('upload-confirm').style.display = 'block';
+      } else {
+        document.getElementById('upload-preview').style.display = 'block';
+        document.getElementById('upload-preview').src = e.target.result;
+        document.getElementById('upload-confirm').textContent = '✓ ' + file.name;
+      }
       document.getElementById('upload-zone').classList.add('has-image');
       document.getElementById('analyze-btn').style.display = 'block';
     };
@@ -704,7 +715,9 @@ Use severity CRITICAL for things that will definitely cause rejection, WARNING f
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: [{ role: "user", content: [
-            { type: "image", source: { type: "base64", media_type: "image/jpeg", data: imageBase64 } },
+            imageMediaType === 'application/pdf'
+              ? { type: "document", source: { type: "base64", media_type: "application/pdf", data: imageBase64 } }
+              : { type: "image", source: { type: "base64", media_type: imageMediaType, data: imageBase64 } },
             { type: "text", text: prompt }
           ]}]
         })
@@ -806,6 +819,7 @@ Use severity CRITICAL for things that will definitely cause rejection, WARNING f
   function resetApp() {
     selectedForm = "";
     imageBase64 = "";
+    imageMediaType = "image/jpeg";
     analysisResults = null;
     document.getElementById('upload-empty').style.display = 'block';
     document.getElementById('upload-preview-wrap').style.display = 'none';
