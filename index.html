@@ -723,11 +723,19 @@ Use severity CRITICAL for things that will definitely cause rejection, WARNING f
           ]}]
         })
       });
+      console.log('Claude response status:', response.status);
       const data = await response.json();
+      console.log('Claude response data:', JSON.stringify(data).substring(0, 300));
+      if (data.error) throw new Error('API error: ' + data.error);
       const text = data.content[0].text;
-      const clean = text.replace(/```json|```/g, "").trim();
+      console.log('Claude text preview:', text.substring(0, 200));
+      const jsonStart = text.indexOf('{');
+      const jsonEnd = text.lastIndexOf('}');
+      if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON in response: ' + text.substring(0, 100));
+      const clean = text.substring(jsonStart, jsonEnd + 1);
       analysisResults = JSON.parse(clean);
     } catch(err) {
+      console.error('FormGuard analysis error:', err.message);
       analysisResults = {
         overallRisk: "MEDIUM",
         summary: "We completed your review and found items to address before submission.",
