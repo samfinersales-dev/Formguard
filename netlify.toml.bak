@@ -15,9 +15,3 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-
-[[redirects]]
-  from = "/blog/*.html"
-  to = "/blog/:splat"
-  status = 301
-  force = true
