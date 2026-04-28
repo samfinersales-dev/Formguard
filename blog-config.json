@@ -1,0 +1,78 @@
+{
+  "siteName": "FormGuard",
+  "domain": "uscisformcheck.com",
+  "topicArea": "USCIS forms, immigration filing errors, RFEs (Requests for Evidence), USCIS processing times, edition date checks, USCIS rejections",
+  "audience": "immigrants, sponsors, and immigration paralegals filing USCIS forms themselves",
+  "audienceLevel": "non-lawyer with very high stakes (immigration status)",
+
+  "stateAware": false,
+
+  "formRotation": [
+    "I-130 Petition for Alien Relative",
+    "I-485 Application to Register Permanent Residence",
+    "I-129 Petition for Nonimmigrant Worker",
+    "I-765 Application for Employment Authorization",
+    "I-131 Application for Travel Document",
+    "N-400 Application for Naturalization",
+    "I-90 Application to Replace Permanent Resident Card",
+    "I-751 Petition to Remove Conditions on Residence",
+    "I-864 Affidavit of Support",
+    "I-589 Application for Asylum",
+    "I-140 Immigrant Petition for Alien Worker",
+    "I-526 Investor Petition",
+    "G-28 Notice of Entry of Appearance"
+  ],
+
+  "topicAngles": [
+    "common filing mistakes for {form} that cause rejection",
+    "{form} edition date and how to verify the current version",
+    "what triggers an RFE on {form}",
+    "USCIS processing times for {form} (current data)",
+    "supporting documents required for {form}",
+    "filing fees and fee waivers for {form}",
+    "how to respond to a Request for Evidence on {form}",
+    "USCIS rejection reasons for {form} and how to fix them",
+    "online vs paper filing for {form}",
+    "premium processing for {form} (where applicable)"
+  ],
+
+  "originalSignalOptions": [
+    "Specific USCIS Policy Manual citation with volume/part/chapter (e.g., USCIS Policy Manual Vol. 7, Part A, Ch. 5)",
+    "Comparison table of edition date acceptance windows for major forms",
+    "Decision tree (e.g., 'Paper file vs. online file: which is right for me?')",
+    "Common rejection reasons documented from USCIS public data, AILA practice advisories, or DHS OIG reports",
+    "Glossary of confusing immigration terms (priority date vs. filing date, RFE vs. NOID, denial vs. rejection)"
+  ],
+
+  "allowedStatSources": [
+    "USCIS official statistics and policy manual",
+    "Department of Homeland Security Office of Inspector General",
+    "AILA (American Immigration Lawyers Association) practice advisories",
+    "Executive Office for Immigration Review (EOIR) statistics",
+    "Government Accountability Office (GAO)",
+    "Migration Policy Institute",
+    "Pew Research Hispanic Trends"
+  ],
+
+  "bannedPhrases": [
+    "immigration is complicated",
+    "the USCIS process can be overwhelming",
+    "navigating the immigration system",
+    "in this article we will explore",
+    "it's important to note",
+    "ultimately",
+    "at the end of the day",
+    "in today's fast-paced world"
+  ],
+
+  "byline": "By the FormGuard immigration filing team",
+  "aboutFooter": "About FormGuard: We help immigrants and sponsors check USCIS forms for filing errors before submission. We publish guides on USCIS forms, edition dates, RFEs, and processing times, updated as USCIS policy changes.",
+  "authorOrgName": "FormGuard Immigration Filing Team",
+
+  "ctaText": "Check your USCIS form for filing errors",
+  "ctaUrl": "https://uscisformcheck.com",
+  "primaryColor": "#d4af6e",
+  "accentColor": "#6cd17a",
+  "bgColor": "#0a0e1a",
+  "darkTheme": true
+}
