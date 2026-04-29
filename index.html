@@ -614,7 +614,7 @@ function triggerFormGuardDownload() {
       <div class="preview-label">Issue preview (full report unlocked after payment):</div>
       <div id="preview-issues"></div>
     </div>
-    <a id="stripe-link" href="https://buy.stripe.com/fZu14n8Pea6pbl0ayn3oA03" target="_blank" style="text-decoration:none">
+    <a id="stripe-link" href="https://buy.stripe.com/fZu14n8Pea6pbl0ayn3oA03" target="_top" style="text-decoration:none">
       <button class="btn-primary btn-full" style="margin-bottom:12px">Unlock Full Report → $24</button>
     </a>
     <div class="paywall-note">One-time payment · Instant access · No subscription</div>
@@ -721,11 +721,8 @@ function checkLimit() {
     reader.readAsDataURL(file);
   }
 
-  async function runCheck() {
-    if (!checkLimit()) return;
-    document.getElementById('form-name-checking').textContent = selectedForm;
-    showScreen('checking');
-
+  // Build the prompt + messages used for AI generation. Used only post-payment.
+  function buildAnalysisMessages() {
     const prompt = `You are an expert USCIS immigration form reviewer with 20 years of experience. A user has uploaded their completed ${selectedForm} form for review before submission.
 
 Carefully analyze this form image and identify:
@@ -742,66 +739,113 @@ Respond in this EXACT JSON format with no other text:
 
 Use severity CRITICAL for things that will definitely cause rejection, WARNING for likely issues, NOTE for suggestions. If you cannot read the form well, note it in the issues.`;
 
-    try {
-      const response = await fetch("/.netlify/functions/claude", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [{ role: "user", content: [
-            imageMediaType === 'application/pdf'
-              ? { type: "document", source: { type: "base64", media_type: "application/pdf", data: imageBase64 } }
-              : { type: "image", source: { type: "base64", media_type: imageMediaType, data: imageBase64 } },
-            { type: "text", text: prompt }
-          ]}]
-        })
-      });
-      console.log('Claude response status:', response.status);
-      const data = await response.json();
-      console.log('Claude response data:', JSON.stringify(data).substring(0, 300));
-      if (data.error) throw new Error('API error: ' + data.error);
-      const text = data.content[0].text;
-      console.log('Claude text preview:', text.substring(0, 200));
-      const jsonStart = text.indexOf('{');
-      const jsonEnd = text.lastIndexOf('}');
-      if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON in response: ' + text.substring(0, 100));
-      const clean = text.substring(jsonStart, jsonEnd + 1);
-      analysisResults = JSON.parse(clean);
-    } catch(err) {
-      console.error('FormGuard analysis error:', err.message);
-      analysisResults = {
-        overallRisk: "MEDIUM",
-        summary: "We completed your review and found items to address before submission.",
-        issues: [{ severity: "WARNING", field: "Image Quality", issue: "Could not fully read all fields. Please ensure the form is flat, well-lit, and all text is clearly visible.", fix: "Retake the photo in good lighting with the form on a flat surface, capturing all text clearly." }],
-        clearFields: [],
-        disclaimer: "This is an AI-assisted review, not legal advice. Consult an immigration attorney for complex cases."
-      };
+    return [{ role: "user", content: [
+      imageMediaType === 'application/pdf'
+        ? { type: "document", source: { type: "base64", media_type: "application/pdf", data: imageBase64 } }
+        : { type: "image", source: { type: "base64", media_type: imageMediaType, data: imageBase64 } },
+      { type: "text", text: prompt }
+    ]}];
+  }
+
+  // Pre-payment: do NOT call the AI. Stash the upload in sessionStorage and
+  // show the paywall preview screen. The actual AI analysis happens only
+  // after payment is verified (see checkPaidReturn below).
+  function runCheck() {
+    if (!checkLimit()) return;
+
+    // Image base64 can be 5-10MB. sessionStorage limit is ~5MB. Reject
+    // anything that won't fit so we don't lose the upload across the redirect.
+    if (imageBase64 && imageBase64.length > 4_500_000) {
+      alert('That image is too large. Please use a smaller photo (under 4MB).');
+      return;
     }
 
+    try {
+      sessionStorage.setItem('fg_upload', JSON.stringify({
+        selectedForm: selectedForm,
+        imageBase64: imageBase64,
+        imageMediaType: imageMediaType,
+      }));
+    } catch(e) {
+      alert('Could not save your upload (browser storage full). Please close other tabs and try again.');
+      return;
+    }
+
+    // Show the paywall preview WITHOUT the AI-generated issues. We'll show a
+    // generic preview so the user knows their form was received and will be
+    // analyzed after payment.
     buildPaywall();
     showScreen('paywall');
   }
 
+  // Post-payment: call the AI with a paid sessionId to actually analyze the form.
+  async function analyzeWithSession(sessionId) {
+    const messages = buildAnalysisMessages();
+    const response = await fetch("/.netlify/functions/claude", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: messages, sessionId: sessionId })
+    });
+    if (!response.ok) {
+      let errBody = {};
+      try { errBody = await response.json(); } catch(e) {}
+      throw new Error(errBody.error || ('HTTP ' + response.status));
+    }
+    const data = await response.json();
+    const text = data.content[0].text;
+    const jsonStart = text.indexOf('{');
+    const jsonEnd = text.lastIndexOf('}');
+    if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON in response');
+    return JSON.parse(text.substring(jsonStart, jsonEnd + 1));
+  }
+
   function buildPaywall() {
-    const r = analysisResults;
-    const color = riskColors[r.overallRisk];
+    // Pre-payment state: analysisResults is null because we haven't called the
+    // AI yet (we now call it post-payment). Show a generic preview with the
+    // form name; the user pays, then sees the real analysis.
+    const r = analysisResults || {
+      overallRisk: 'PENDING',
+      summary: `Your ${selectedForm} has been received. Unlock to see the full AI review with every issue and exact fix.`,
+      issues: [
+        { severity: 'CRITICAL', field: 'AI review', issue: 'Full analysis ready after payment', fix: 'Tap Unlock below to see every issue and how to fix it.' },
+        { severity: 'WARNING',  field: 'Field-by-field check', issue: 'Detailed report ready after payment', fix: 'Includes blank fields, date format errors, name inconsistencies, signature checks.' },
+        { severity: 'NOTE',     field: 'USCIS-specific tips', issue: 'Recommendations ready after payment', fix: 'Form-specific tips for ' + selectedForm + ' to reduce rejection risk.' },
+      ],
+      clearFields: [],
+      disclaimer: 'This is an AI-assisted review, not legal advice. Consult an immigration attorney for complex cases.',
+    };
+    const color = riskColors[r.overallRisk] || '#c9a84c';
     const banner = document.getElementById('paywall-banner');
-    banner.style.background = `${color}0d`;
-    banner.style.border = `1px solid ${color}33`;
-    document.getElementById('paywall-risk-label').style.color = color;
-    document.getElementById('paywall-risk-label').textContent = r.overallRisk + ' RISK LEVEL';
-    document.getElementById('paywall-title').textContent = `We found ${r.issues.length} issue${r.issues.length !== 1 ? 's' : ''} with your ${selectedForm}`;
-    document.getElementById('paywall-summary').textContent = r.summary;
+    if (banner) {
+      banner.style.background = `${color}0d`;
+      banner.style.border = `1px solid ${color}33`;
+    }
+    const riskLabel = document.getElementById('paywall-risk-label');
+    if (riskLabel) {
+      riskLabel.style.color = color;
+      riskLabel.textContent = (r.overallRisk === 'PENDING') ? 'YOUR REVIEW IS READY' : (r.overallRisk + ' RISK LEVEL');
+    }
+    const titleEl = document.getElementById('paywall-title');
+    if (titleEl) {
+      titleEl.textContent = (r.overallRisk === 'PENDING')
+        ? `Your ${selectedForm} review is ready`
+        : `We found ${r.issues.length} issue${r.issues.length !== 1 ? 's' : ''} with your ${selectedForm}`;
+    }
+    const summaryEl = document.getElementById('paywall-summary');
+    if (summaryEl) summaryEl.textContent = r.summary;
 
     const container = document.getElementById('preview-issues');
-    container.innerHTML = '';
-    r.issues.slice(0, 3).forEach((issue, i) => {
-      const div = document.createElement('div');
-      div.className = 'issue-row' + (i > 0 ? ' blurred' : '');
-      div.innerHTML = `
-        <span class="severity-badge" style="background:${severityBgs[issue.severity]};color:${severityColors[issue.severity]}">${issue.severity}</span>
-        <div><div class="issue-field">${issue.field}</div><div class="issue-text">${issue.issue}</div></div>`;
-      container.appendChild(div);
-    });
+    if (container) {
+      container.innerHTML = '';
+      r.issues.slice(0, 3).forEach((issue, i) => {
+        const div = document.createElement('div');
+        div.className = 'issue-row' + (i > 0 ? ' blurred' : '');
+        div.innerHTML = `
+          <span class="severity-badge" style="background:${severityBgs[issue.severity]};color:${severityColors[issue.severity]}">${issue.severity}</span>
+          <div><div class="issue-field">${issue.field}</div><div class="issue-text">${issue.issue}</div></div>`;
+        container.appendChild(div);
+      });
+    }
   }
 
   function buildResults() {
@@ -874,16 +918,18 @@ Use severity CRITICAL for things that will definitely cause rejection, WARNING f
 
   // Post-payment return handler
   // After Stripe redirects user back to /?session_id=cs_xxx, verify with Stripe
+  // and THEN run the AI analysis (only after payment is confirmed).
   (async function checkPaidReturn() {
     try {
       var params = new URLSearchParams(window.location.search);
       var sessionId = params.get('session_id');
       if (!sessionId) return;
 
-      // Clean URL immediately
+      // Clean URL immediately so refresh doesn't re-run
       window.history.replaceState({}, '', window.location.pathname);
 
       // Show loading
+      document.getElementById('form-name-checking').textContent = selectedForm || 'your form';
       showScreen('checking');
 
       // Verify with Stripe via our server
@@ -895,36 +941,46 @@ Use severity CRITICAL for things that will definitely cause rejection, WARNING f
       var vd = await vr.json();
 
       if (!vd.paid) {
-        alert('Payment could not be verified. If you completed payment, please contact support.');
+        alert('Payment could not be verified. If you completed payment, contact support@uscisformcheck.com with your Stripe receipt.');
         showScreen('landing');
         return;
       }
 
-      // Payment verified — restore analysis and show results
-      var saved = sessionStorage.getItem('fg_results');
-      if (saved) {
-        try { analysisResults = JSON.parse(saved); } catch(e) {}
-      }
-      if (analysisResults) {
-        buildResults();
-        var disc = document.getElementById('disclaimer-text');
-        if (disc && analysisResults.disclaimer) disc.textContent = '⚠ ' + analysisResults.disclaimer;
-        showScreen('results');
-      } else {
-        // Results expired from sessionStorage — need to re-upload
-        alert('Session expired. Please upload your form again.');
+      // Restore the upload from sessionStorage
+      var savedRaw = sessionStorage.getItem('fg_upload');
+      if (!savedRaw) {
+        alert('Your upload expired. Please contact support@uscisformcheck.com with your Stripe receipt — we can re-run the analysis manually.');
         showScreen('landing');
+        return;
       }
+      try {
+        var saved = JSON.parse(savedRaw);
+        selectedForm = saved.selectedForm;
+        imageBase64 = saved.imageBase64;
+        imageMediaType = saved.imageMediaType;
+      } catch(e) {
+        alert('Could not restore your upload. Contact support@uscisformcheck.com with your Stripe receipt.');
+        showScreen('landing');
+        return;
+      }
+
+      // Now run the AI analysis with the verified sessionId
+      try {
+        analysisResults = await analyzeWithSession(sessionId);
+      } catch (genErr) {
+        console.error('Post-payment analysis failed:', genErr);
+        alert('Payment was verified, but the analysis failed. Contact support@uscisformcheck.com with your Stripe receipt and we will deliver your report manually within 24 hours.');
+        showScreen('landing');
+        return;
+      }
+
+      // Render the full results
+      buildResults();
+      var disc = document.getElementById('disclaimer-text');
+      if (disc && analysisResults && analysisResults.disclaimer) disc.textContent = '⚠ ' + analysisResults.disclaimer;
+      showScreen('results');
     } catch(e) { console.warn('paid return handler error', e); }
   })();
-
-  // Save analysis to sessionStorage when paywall is shown so it survives Stripe redirect
-  // Note: this is OK because the content can only be shown after verify-payment confirms
-  var origBuildPaywall = buildPaywall;
-  buildPaywall = function() {
-    origBuildPaywall();
-    try { if (analysisResults) sessionStorage.setItem('fg_results', JSON.stringify(analysisResults)); } catch(e) {}
-  };
 
 // —— DOWNLOAD REPORT ————————————————————————————————————————
 function buildReportText() {
@@ -1009,6 +1065,7 @@ function toggleFaq(btn){var a=btn.nextElementSibling;var t=btn.querySelector('.f
   <p>Questions or issues? We're here to help.</p>
   <a href="mailto:info&#64;uscisformcheck.com">info&#64;uscisformcheck.com</a>
   <p class="legal">FormGuard · USCIS Form Error Checker · Not legal advice</p>
+  <p class="legal" style="margin-top:14px"><a href="/privacy" style="color:rgba(255,255,255,.5);text-decoration:none;margin:0 8px">Privacy Policy</a>·<a href="/terms" style="color:rgba(255,255,255,.5);text-decoration:none;margin:0 8px">Terms of Service</a></p>
 </footer>
 
 <script src="/download-module.js"></script>

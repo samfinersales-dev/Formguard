@@ -4,10 +4,13 @@
 [build.processing]
   skip_processing = true
 
-[[redirects]]
-  from = "/webhook/stripe"
-  to = "/.netlify/functions/stripe-webhook"
-  status = 200
+# Claude vision can take 15-25s on larger USCIS form images
+[functions."claude"]
+  timeout = 26
+
+# Stripe verify call should be fast
+[functions."verify-payment"]
+  timeout = 10
 
 [[headers]]
   for = "/*"
@@ -15,6 +18,8 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
 
 [[redirects]]
   from = "/blog/*.html"
