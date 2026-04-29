@@ -1,139 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="index,follow">
-<title>Terms of Service | FormGuard</title>
-<meta name="description" content="FormGuard terms of service. Read before using the service.">
-<link rel="canonical" href="https://uscisformcheck.com/terms">
-<link href="https://fonts.googleapis.com/css2?family=Georgia&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--gold:#c9a84c;--dark:#0a1628;--text:#e6e6e6;--muted:#a0a0a0;--rule:rgba(255,255,255,.1);--bg:#0a1628;--card:#0f1f33}
-body{font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased}
-a{color:var(--gold)}
-.nav{background:var(--bg);border-bottom:1px solid var(--rule);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.nav-logo{font-family:Georgia,serif;font-size:1.2rem;color:var(--gold);text-decoration:none;font-weight:700}
-.nav-back{color:var(--gold);font-size:.85rem;text-decoration:none;font-weight:500}
-.layout{max-width:760px;margin:0 auto;padding:48px 32px 80px}
-h1{font-family:Georgia,serif;font-size:2.2rem;line-height:1.2;color:var(--gold);margin-bottom:8px}
-.updated{color:var(--muted);font-size:.85rem;margin-bottom:32px}
-h2{font-family:Georgia,serif;font-size:1.3rem;color:#fff;margin:32px 0 12px;padding-left:14px;position:relative}
-h2::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;background:var(--gold);border-radius:2px}
-p{margin-bottom:14px;color:var(--text)}
-ul{padding-left:24px;margin-bottom:14px}
-li{margin-bottom:6px}
-strong{color:#fff}
-.lead{background:var(--card);border-left:3px solid var(--gold);padding:18px 22px;border-radius:4px;font-size:1.02rem;margin-bottom:32px}
-.warning{background:rgba(255,152,0,.08);border-left:3px solid #ff9800;padding:18px 22px;border-radius:4px;font-size:.95rem;margin:24px 0}
-.ftr{background:#070f1a;padding:24px 32px;text-align:center;font-size:.82rem;color:var(--muted);border-top:1px solid var(--rule)}
-.ftr a{color:var(--gold);text-decoration:none;margin:0 10px}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow">
+  <title>Terms of Service | FormGuard</title>
+  <meta name="description" content="The legal agreement between you and FormGuard.">
+  <link rel="canonical" href="https://uscisformcheck.com/terms.html">
+  <style>
+    :root {
+      --ink: #e6e6e6;
+      --bg: #0a1628;
+      --card: #0f1f33;
+      --border: rgba(255,255,255,.1);
+      --accent: #c9a84c;
+      --accent-hover: #dabb6c;
+      --muted: #a0a0a0;
+      --content-width: 720px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Georgia, 'Times New Roman', serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    .site-header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 24px;
+    }
+    .site-header-inner {
+      max-width: var(--content-width);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .site-name {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .site-nav { display: flex; gap: 20px; font-size: 14px; }
+    .site-nav a { color: var(--muted); text-decoration: none; }
+    .site-nav a:hover { color: var(--accent); }
+    main {
+      max-width: var(--content-width);
+      margin: 0 auto;
+      padding: 40px 24px 60px;
+    }
+    h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; }
+    h2 { font-size: 20px; margin: 36px 0 10px; color: var(--accent); }
+    h3 { font-size: 16px; margin: 22px 0 6px; }
+    .effective-date { color: var(--muted); font-size: 14px; margin: 0 0 28px; }
+    p, ul, ol { margin: 0 0 14px; }
+    ul, ol { padding-left: 22px; }
+    li { margin-bottom: 6px; }
+    a { color: var(--accent); }
+    a:hover { color: var(--accent-hover); }
+    .callout {
+      background: var(--card);
+      border-left: 4px solid var(--accent);
+      padding: 14px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 16px 0;
+      font-size: 15px;
+    }
+    .warning-box {
+      background: var(--card);
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-size: 15px;
+    }
+    footer.site-footer {
+      border-top: 1px solid var(--border);
+      max-width: var(--content-width);
+      margin: 40px auto 0;
+      padding: 24px 24px 40px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    footer.site-footer a { color: var(--muted); margin: 0 6px; }
 </style>
 </head>
 <body>
-
-<nav class="nav">
-  <a href="/" class="nav-logo">FormGuard</a>
-  <a href="/" class="nav-back">← Back to home</a>
-</nav>
-
-<div class="layout">
-  <h1>Terms of Service</h1>
-  <p class="updated">Last updated: April 29, 2026</p>
-
-  <p class="lead">
-    These Terms of Service ("Terms") govern your use of FormGuard at uscisformcheck.com (the "Service"). By using the Service, you agree to these Terms. If you do not agree, do not use the Service.
-  </p>
-
-  <h2>1. What FormGuard is — and is not</h2>
-  <p>
-    FormGuard is a self-service tool that uses AI to analyze uploaded USCIS immigration form images and return an error report. <strong>FormGuard is not a law firm, an attorney, or an accredited representative. We do not provide legal advice. Using the Service does not create an attorney-client relationship.</strong>
-  </p>
-  <div class="warning">
-    <strong>Important:</strong> USCIS forms and instructions change frequently. The Service compares your form against general patterns of common USCIS errors but cannot guarantee compliance with every requirement. Always verify forms and instructions at uscis.gov before filing. For complex matters, consult a licensed immigration attorney or DOJ-accredited representative.
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="/" class="site-name">FormGuard</a>
+    <nav class="site-nav">
+      <a href="/privacy.html">Privacy</a> · <a href="/terms.html" style="color:var(--accent);font-weight:600">Terms</a> · <a href="/refund.html">Refund</a>
+    </nav>
   </div>
+</header>
+<main>
+<h1>Terms of Service</h1>
+<p class="effective-date">Effective date: April 30, 2026 · Last updated: April 30, 2026</p>
 
-  <h2>2. Eligibility</h2>
-  <p>
-    You must be at least 18 years old to use the Service. By using the Service, you represent that you have the legal capacity to enter into these Terms. If you are submitting a form on behalf of another person (such as a family member you are sponsoring), you represent that you have authority to do so.
-  </p>
+<p>These Terms of Service ("Terms") govern your use of FormGuard (uscisformcheck.com) (the "Service"), operated by Simcha Fuchs ("we," "us," "our"), an individual operating a sole proprietorship doing business as FormGuard. By accessing or using the Service, you agree to these Terms. If you do not agree, do not use the Service.</p>
 
-  <h2>3. Pricing and refunds</h2>
-  <ul>
-    <li>The Service is offered as a one-time payment of $24 per form review. Pricing is shown at checkout and may change without notice for new purchases.</li>
-    <li>Payments are processed by Stripe.</li>
-    <li><strong>Refunds:</strong> Because the Service generates a review on demand, all sales are final. If the Service fails to deliver your review due to a technical error on our side, contact <a href="mailto:support@uscisformcheck.com">support@uscisformcheck.com</a> within 7 days and we will either re-deliver or refund.</li>
-  </ul>
-
-  <h2>4. Acceptable use</h2>
-  <p>You agree not to:</p>
-  <ul>
-    <li>Use the Service for any unlawful purpose.</li>
-    <li>Submit forms or images that contain another person's information without their authorization (other than legitimate sponsorship or family-petition contexts).</li>
-    <li>Use the Service to facilitate immigration fraud.</li>
-    <li>Attempt to circumvent payment, bypass security, or scrape the Service.</li>
-    <li>Reverse-engineer, decompile, or attempt to extract the underlying AI prompts or model behavior.</li>
-    <li>Submit images that contain malicious code or content unrelated to USCIS forms.</li>
-  </ul>
-
-  <h2>5. Your content</h2>
-  <p>
-    You retain ownership of the form images you submit. By submitting them, you grant us a limited license to process them through our AI provider for the sole purpose of generating your review. We do not retain or share your form content beyond what is needed to deliver the Service. See our <a href="/privacy">Privacy Policy</a> for details.
-  </p>
-
-  <h2>6. AI-generated reviews</h2>
-  <p>
-    Reviews are generated by an AI model based on your uploaded image. AI output may contain errors, omissions, or content that does not match every USCIS requirement applicable to your specific situation. The Service may miss issues that a human reviewer would catch, and may flag issues that are not actually problems. <strong>You are responsible for verifying every conclusion in the review and for confirming compliance with current USCIS instructions before filing.</strong>
-  </p>
-
-  <h2>7. No guarantee of USCIS approval</h2>
-  <p>
-    Many factors affect whether USCIS approves an application: eligibility, evidence, prior immigration history, biometrics, interviews, and adjudicator discretion, among others. <strong>FormGuard cannot guarantee USCIS approval of any application.</strong> The Service only checks for common errors a reviewer can spot from the form image alone.
-  </p>
-
-  <h2>8. Disclaimer of warranties</h2>
-  <p>
-    The Service is provided "as is" and "as available." We make no warranties, express or implied, about the accuracy, reliability, completeness, or suitability of the Service or any review generated. We do not warrant that the Service will be uninterrupted or error-free.
-  </p>
-
-  <h2>9. Limitation of liability</h2>
-  <p>
-    To the maximum extent permitted by law, FormGuard, its operators, and its suppliers will not be liable for any indirect, incidental, consequential, special, or exemplary damages arising from your use of the Service, including but not limited to denied applications, lost filing fees, missed deadlines, removed status, attorneys' fees, or immigration consequences. Our total liability for any claim arising from these Terms or your use of the Service is limited to the amount you paid us in the 12 months preceding the claim.
-  </p>
-
-  <h2>10. Indemnification</h2>
-  <p>
-    You agree to indemnify and hold harmless FormGuard from any claims, losses, or damages arising from your use of the Service, your violation of these Terms, or your filings made using documents or guidance generated by the Service.
-  </p>
-
-  <h2>11. Termination</h2>
-  <p>
-    We may suspend or terminate your access to the Service at any time if you violate these Terms or engage in abuse of the Service. We may also discontinue the Service at any time.
-  </p>
-
-  <h2>12. Changes to these Terms</h2>
-  <p>
-    We may update these Terms. The "last updated" date at the top reflects the most recent version. Continued use of the Service after a change constitutes acceptance of the updated Terms.
-  </p>
-
-  <h2>13. Governing law</h2>
-  <p>
-    These Terms are governed by the laws of the United States and the State of Delaware, without regard to conflict-of-law rules. Disputes will be resolved in the state or federal courts located in Delaware.
-  </p>
-
-  <h2>14. Contact</h2>
-  <p>
-    Questions about these Terms? Email <a href="mailto:support@uscisformcheck.com">support@uscisformcheck.com</a>.
-  </p>
+<div class="warning-box">
+<strong>Important — The Service provides informational templates and analyses, not legal advice.</strong> Nothing generated by or obtained through the Service is legal advice. Outputs are starting points that must be reviewed and approved by qualified legal counsel in your jurisdiction before use in any matter with legal consequences. We make no guarantee that any output complies with any specific law, regulation, court rule, or contract. You are solely responsible for any decisions you make based on the Service's output.
 </div>
 
-<div class="ftr">
-  <a href="/">Home</a> ·
-  <a href="/privacy">Privacy</a> ·
-  <a href="/terms">Terms</a>
-  <p style="margin-top:12px">© 2026 FormGuard. AI-generated reviews are informational only and not legal or immigration advice.</p>
-</div>
+<h2>1. Eligibility</h2>
+<p>You may use the Service only if:</p>
+<ul>
+  <li>You are at least 18 years old;</li>
+  <li>You have the legal authority to bind the entity on whose behalf you are acquiring the Service (if any); and</li>
+  <li>Your use complies with all applicable laws in your jurisdiction.</li>
+</ul>
 
+<h2>2. The Service</h2>
+<p>The Service generates AI-powered review of completed USCIS immigration forms (PDFs) for common errors before filing based on inputs you provide. Generation is performed by third-party large language models. The output is a starting draft intended to accelerate your work, not a finished legal product.</p>
+<p>We do not guarantee:</p>
+<ul>
+  <li>The accuracy, completeness, or currency of any generated content;</li>
+  <li>That any generated document is suitable for your specific situation, jurisdiction, or court;</li>
+  <li>That generated content is free from errors, omissions, or misstatements;</li>
+  <li>That a court, agency, or counterparty will accept any document generated by the Service;</li>
+  <li>Uninterrupted or error-free operation of the Service.</li>
+</ul>
+
+<h2>3. Pricing and payment</h2>
+<p>Current pricing is displayed on <a href="/">the homepage</a> and may change at any time. Current plans:</p>
+<ul>
+<li><strong>One-time check</strong> — a single fee per form analysis.</li>
+</ul>
+<p>All fees are in U.S. dollars unless otherwise stated. Taxes, if applicable, are your responsibility. Payment is processed by Stripe; by paying, you also agree to Stripe's terms.</p>
+
+<h2>4. Refunds</h2>
+<p>We offer a 30-day money-back guarantee on all purchases. See the full <a href="/refund.html">Refund Policy</a>.</p>
+
+<h2>5. Your content and responsibilities</h2>
+<p>You are responsible for all information you provide to the Service. You represent that:</p>
+<ul>
+  <li>You have the right to share the information with us;</li>
+  <li>The information is accurate to the best of your knowledge;</li>
+  <li>You will not input any data that you are not authorised to disclose (e.g., third-party confidential information, protected health information belonging to others, or personal data of individuals who have not consented).</li>
+  <li>You will not use the Service to harass, defraud, or harm others, or to file documents you know to be false or misleading.</li>
+</ul>
+
+<h2>6. Intellectual property</h2>
+
+<h3>Your output</h3>
+<p>You own the specific USCIS form check reports generated for you from your inputs. You may edit, distribute, file, and use them for any lawful purpose related to your situation, including filing them with a court or counterparty.</p>
+
+<h3>Our IP</h3>
+<p>We own the Service itself: the website, source code, prompts, templates, underlying generation logic, trademarks, and branding. You may not:</p>
+<ul>
+  <li>Resell, sublicense, or redistribute the Service or access to it;</li>
+  <li>Reverse engineer or attempt to extract our prompts or generation logic;</li>
+  <li>Use the Service to train a competing AI product;</li>
+  <li>Use our name, logo, or trademarks without written permission.</li>
+</ul>
+
+<h2>7. Disclaimer of warranties</h2>
+<p>THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE," WITHOUT ANY WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. WE EXPLICITLY DISCLAIM ALL WARRANTIES INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, ACCURACY, AND LEGAL COMPLIANCE.</p>
+<p>WITHOUT LIMITING THE FOREGOING, WE DO NOT WARRANT THAT: (A) ANY GENERATED OUTPUT WILL MEET THE REQUIREMENTS OF ANY APPLICABLE LAW, REGULATION, COURT RULE, OR INDUSTRY STANDARD; (B) ANY GENERATED OUTPUT WILL BE LEGALLY ENFORCEABLE OR ADEQUATE TO PROTECT YOUR INTERESTS; (C) THE SERVICE WILL BE UNINTERRUPTED OR ERROR-FREE.</p>
+
+<h2>8. Limitation of liability</h2>
+<p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW:</p>
+<ul>
+  <li><strong>Our aggregate liability</strong> arising out of or relating to the Service, whether in contract, tort, warranty, or any other legal theory, shall not exceed the total amount you paid to us for the Service in the twelve (12) months immediately preceding the event giving rise to the claim, or one hundred U.S. dollars (US$100), whichever is greater.</li>
+  <li><strong>We shall not be liable</strong> for any indirect, incidental, special, consequential, exemplary, or punitive damages, including but not limited to lost profits, lost revenue, lost data, business interruption, regulatory fines, litigation costs, court sanctions, or damages resulting from reliance on any generated content, even if we have been advised of the possibility of such damages.</li>
+  <li><strong>You acknowledge</strong> that the fees charged reflect this allocation of risk and that the Service would not be offered at these prices without these limits.</li>
+</ul>
+<p>Some jurisdictions do not allow the exclusion of certain warranties or limitation of certain damages; in those jurisdictions, our liability is limited to the maximum extent permitted by law.</p>
+
+<h2>9. Indemnification</h2>
+<p>You agree to defend, indemnify, and hold harmless Simcha Fuchs and FormGuard from and against any and all claims, damages, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to:</p>
+<ul>
+  <li>Your use of the Service;</li>
+  <li>Your violation of these Terms;</li>
+  <li>Your violation of any law or the rights of any third party;</li>
+  <li>Any content, data, or information you provided to the Service;</li>
+  <li>Your use of any generated output, including its filing, adoption, distribution, or enforcement.</li>
+</ul>
+
+<h2>10. Termination</h2>
+<p>You may stop using the Service at any time. We may suspend or terminate your access, with or without notice, for any reason, including if we believe you have violated these Terms. On termination, provisions that by their nature should survive (e.g., intellectual property, warranty disclaimers, limitation of liability, indemnification, governing law, dispute resolution) will survive.</p>
+
+<h2>11. Governing law</h2>
+<p>These Terms are governed by the laws of the State of Wyoming, United States, without regard to conflict-of-law principles.</p>
+
+<h2>12. Dispute resolution — mandatory arbitration and class action waiver</h2>
+<p><strong>Please read this section carefully. It affects your legal rights.</strong></p>
+
+<h3>Informal resolution first</h3>
+<p>Before filing any formal action, you agree to contact us at <a href="mailto:support@uscisformcheck.com">support@uscisformcheck.com</a> and attempt to resolve the dispute informally for at least thirty (30) days.</p>
+
+<h3>Binding arbitration</h3>
+<p>If informal resolution fails, any dispute arising out of or relating to these Terms or the Service shall be resolved exclusively by binding individual arbitration administered by the American Arbitration Association (AAA) under its Commercial Arbitration Rules. The arbitration will be conducted in English and, unless the parties agree otherwise, on a documents-only basis. The seat of arbitration is Cheyenne, Wyoming, USA.</p>
+
+<h3>Class action and jury trial waiver</h3>
+<p>YOU AND WE EACH WAIVE THE RIGHT TO A JURY TRIAL AND THE RIGHT TO PARTICIPATE IN A CLASS ACTION, CLASS ARBITRATION, OR REPRESENTATIVE ACTION. DISPUTES MUST BE BROUGHT INDIVIDUALLY AND CANNOT BE CONSOLIDATED WITH CLAIMS OF OTHER USERS.</p>
+
+<h3>Limitation period</h3>
+<p>Any claim must be filed within <strong>one (1) year</strong> after the cause of action arises; otherwise it is permanently barred. This period is shorter than the default statute of limitations and is a material condition of the Service being offered at the current price.</p>
+
+<h3>Exceptions</h3>
+<p>Either party may seek injunctive relief in court to protect intellectual property rights or to enforce the arbitration agreement.</p>
+
+<h2>13. Changes to these terms</h2>
+<p>We may update these Terms from time to time. We will update the "Last updated" date. For material changes, we will provide reasonable notice (e.g., via email if we have your address, or by posting a banner on the homepage). Continued use after the change constitutes acceptance.</p>
+
+<h2>14. Miscellaneous</h2>
+<ul>
+  <li><strong>Entire agreement.</strong> These Terms together with the <a href="/privacy.html">Privacy Policy</a> and <a href="/refund.html">Refund Policy</a> constitute the entire agreement between you and us regarding the Service.</li>
+  <li><strong>Severability.</strong> If any provision is held unenforceable, the remaining provisions remain in full force.</li>
+  <li><strong>No waiver.</strong> Our failure to enforce any provision is not a waiver of that provision.</li>
+  <li><strong>Assignment.</strong> You may not assign these Terms without our written consent. We may assign without consent in connection with a sale of the business.</li>
+  <li><strong>Force majeure.</strong> We are not liable for delays or failures resulting from events beyond our reasonable control.</li>
+</ul>
+
+<h2>15. Contact</h2>
+<p>For any question about these Terms:</p>
+<p><strong>Email:</strong> <a href="mailto:support@uscisformcheck.com">support@uscisformcheck.com</a></p>
+</main>
+<footer class="site-footer">
+  <a href="/">Home</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/refund.html">Refund</a>
+  <p style="margin-top:12px">© 2026 FormGuard · operated by Simcha Fuchs · documents generated by the Service are templates and do not constitute legal advice.</p>
+</footer>
 </body>
 </html>
