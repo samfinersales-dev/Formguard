@@ -71,8 +71,8 @@
 
   "ctaText": "Check your USCIS form for filing errors",
   "ctaUrl": "https://uscisformcheck.com",
-  "primaryColor": "#d4af6e",
-  "accentColor": "#6cd17a",
-  "bgColor": "#0a0e1a",
-  "darkTheme": true
+  "primaryColor": "#1a5c3a",
+  "accentColor": "#c9a96e",
+  "bgColor": "#faf9f7",
+  "darkTheme": false
 }
