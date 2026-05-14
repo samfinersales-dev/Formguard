@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 FormGuard (uscisformcheck.com) — a single-page web app that lets users upload a completed USCIS immigration form, pay $24 via Stripe, and receive an AI-generated error report from Claude vision. Static site hosted on Netlify; two serverless functions plus two GitHub Actions cron jobs handle everything dynamic. No build step, no framework, no package manager beyond `stripe` for the functions.
 
+**Product roadmap:** `ACQUISITION-PLAN.md` in the repo root is the canonical strategy doc — acquisition thesis, phased priorities, and hard constraints (notably: never store the form image). Read it before proposing scope changes.
+
 ## Commands
 
 There is no `build`, `lint`, or `test` script. Common operations:
