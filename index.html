@@ -614,11 +614,13 @@ function triggerFormGuardDownload() {
       <div class="preview-label">Issue preview (full report unlocked after payment):</div>
       <div id="preview-issues"></div>
     </div>
-    <input id="lead-email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false"
-           placeholder="Email (optional — for filing tips)"
+    <div id="lead-email-hint" style="font-size:13px;color:var(--muted);margin-bottom:6px">Enter your email to unlock your full report.</div>
+    <input id="lead-email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" required
+           placeholder="Email address"
+           oninput="updateUnlockState()"
            style="width:100%;padding:12px 14px;margin-bottom:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:6px;color:#fff;font-size:14px;font-family:inherit;box-sizing:border-box" />
-    <a id="stripe-link" href="https://buy.stripe.com/fZu14n8Pea6pbl0ayn3oA03" target="_top" onclick="captureLead()" style="text-decoration:none">
-      <button class="btn-primary btn-full" style="margin-bottom:12px">Unlock Full Report → $24</button>
+    <a id="stripe-link" href="#" target="_top" onclick="captureLead()" aria-disabled="true" style="text-decoration:none;pointer-events:none;opacity:.5">
+      <button id="unlock-btn" class="btn-primary btn-full" disabled style="margin-bottom:12px">Unlock Full Report → $24</button>
     </a>
     <div class="paywall-note">One-time payment · Instant access · No subscription</div>
     <div class="paywall-compare">Compare to $200–$400/hr for an immigration attorney</div>
@@ -801,6 +803,46 @@ Use severity CRITICAL for things that will definitely cause rejection, WARNING f
     if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON in response');
     return JSON.parse(text.substring(jsonStart, jsonEnd + 1));
   }
+
+  // Stripe payment link URL comes from a Netlify env var (per-environment) and
+  // is fetched on load. Until it arrives, the Unlock button stays disabled.
+  var configLoaded = false;
+
+  // Gate the Unlock button on (a) a valid email and (b) config having loaded.
+  // Disables the Stripe link via pointer-events until both are satisfied.
+  function updateUnlockState() {
+    var input = document.getElementById('lead-email');
+    var link = document.getElementById('stripe-link');
+    var btn = document.getElementById('unlock-btn');
+    if (!input || !link || !btn) return;
+    var email = input.value ? input.value.trim() : '';
+    var valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+    if (valid && configLoaded) {
+      link.style.pointerEvents = '';
+      link.style.opacity = '';
+      link.removeAttribute('aria-disabled');
+      btn.disabled = false;
+    } else {
+      link.style.pointerEvents = 'none';
+      link.style.opacity = '.5';
+      link.setAttribute('aria-disabled', 'true');
+      btn.disabled = true;
+    }
+  }
+
+  (async function loadConfig() {
+    try {
+      var res = await fetch('/.netlify/functions/get-config');
+      if (!res.ok) return;
+      var cfg = await res.json();
+      var link = document.getElementById('stripe-link');
+      if (link && cfg && cfg.stripePaymentLinkUrl) {
+        link.href = cfg.stripePaymentLinkUrl;
+        configLoaded = true;
+        updateUnlockState();
+      }
+    } catch (e) { /* link stays disabled if config fails to load */ }
+  })();
 
   // Fire-and-forget email capture when the user clicks Unlock. sendBeacon is
   // designed for "send as the page unloads" and survives the Stripe redirect.
