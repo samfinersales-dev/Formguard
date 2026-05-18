@@ -1,3 +1,4 @@
+# staging branch active
 [build]
   functions = "netlify/functions"
 
