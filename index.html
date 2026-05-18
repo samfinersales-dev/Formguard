@@ -614,7 +614,10 @@ function triggerFormGuardDownload() {
       <div class="preview-label">Issue preview (full report unlocked after payment):</div>
       <div id="preview-issues"></div>
     </div>
-    <a id="stripe-link" href="https://buy.stripe.com/fZu14n8Pea6pbl0ayn3oA03" target="_top" style="text-decoration:none">
+    <input id="lead-email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false"
+           placeholder="Email (optional — for filing tips)"
+           style="width:100%;padding:12px 14px;margin-bottom:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:6px;color:#fff;font-size:14px;font-family:inherit;box-sizing:border-box" />
+    <a id="stripe-link" href="https://buy.stripe.com/fZu14n8Pea6pbl0ayn3oA03" target="_top" onclick="captureLead()" style="text-decoration:none">
       <button class="btn-primary btn-full" style="margin-bottom:12px">Unlock Full Report → $24</button>
     </a>
     <div class="paywall-note">One-time payment · Instant access · No subscription</div>
@@ -784,7 +787,7 @@ Use severity CRITICAL for things that will definitely cause rejection, WARNING f
     const response = await fetch("/.netlify/functions/claude", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: messages, sessionId: sessionId })
+      body: JSON.stringify({ messages: messages, sessionId: sessionId, formType: selectedForm })
     });
     if (!response.ok) {
       let errBody = {};
@@ -797,6 +800,23 @@ Use severity CRITICAL for things that will definitely cause rejection, WARNING f
     const jsonEnd = text.lastIndexOf('}');
     if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON in response');
     return JSON.parse(text.substring(jsonStart, jsonEnd + 1));
+  }
+
+  // Fire-and-forget email capture when the user clicks Unlock. sendBeacon is
+  // designed for "send as the page unloads" and survives the Stripe redirect.
+  // text/plain Content-Type avoids a CORS preflight that the beacon can't await.
+  function captureLead() {
+    try {
+      var input = document.getElementById('lead-email');
+      var email = input && input.value ? input.value.trim().toLowerCase() : '';
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return;
+      var payload = JSON.stringify({ email: email, formType: selectedForm || null, source: 'paywall' });
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/.netlify/functions/capture-lead', new Blob([payload], { type: 'text/plain' }));
+      } else {
+        fetch('/.netlify/functions/capture-lead', { method: 'POST', body: payload, keepalive: true }).catch(function(){});
+      }
+    } catch (e) { /* never block the Stripe click */ }
   }
 
   function buildPaywall() {

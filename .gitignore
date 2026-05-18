@@ -2,3 +2,4 @@
 .netlify
 .blog-state.json
 .blog-debug-failed.txt
+node_modules/

@@ -5,11 +5,37 @@
 // endpoint can be abused as a free general-purpose Claude proxy.
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const { createClient } = require('@supabase/supabase-js');
 
 const ALLOWED_ORIGINS = [
   'https://uscisformcheck.com',
   'https://www.uscisformcheck.com',
 ];
+
+// Supabase singleton — created once per warm container.
+// Skipped (null) when env vars are missing so local dev without Supabase still works.
+const supabase = (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY)
+  ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
+      auth: { persistSession: false },
+    })
+  : null;
+
+const ALLOWED_RISKS = new Set(['HIGH', 'MEDIUM', 'LOW', 'UNKNOWN']);
+
+function extractAnalysis(content) {
+  const text = (content || [])
+    .filter(b => b && b.type === 'text' && typeof b.text === 'string')
+    .map(b => b.text)
+    .join('');
+  const start = text.indexOf('{');
+  const end = text.lastIndexOf('}');
+  if (start === -1 || end === -1 || end <= start) return null;
+  try {
+    return JSON.parse(text.substring(start, end + 1));
+  } catch {
+    return null;
+  }
+}
 
 function corsHeaders(event) {
   const origin = (event.headers && (event.headers.origin || event.headers.Origin)) || '';
@@ -44,7 +70,7 @@ exports.handler = async function (event) {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON' }) };
   }
 
-  const { messages, sessionId } = body;
+  const { messages, sessionId, formType } = body;
   if (!messages || !messages.length) {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'No messages provided' }) };
   }
@@ -111,6 +137,35 @@ exports.handler = async function (event) {
     if (!response.ok) {
       console.error('[formguard-claude] Anthropic error:', response.status, JSON.stringify(data).slice(0, 200));
       return { statusCode: 502, headers, body: JSON.stringify({ error: 'Analysis service temporarily unavailable. Please try again.' }) };
+    }
+
+    // Capture the analysis for the Phase 1 acquisition dataset.
+    // Wrapped end-to-end so a Supabase outage never breaks the paid response.
+    if (supabase) {
+      try {
+        const analysis = extractAnalysis(data.content);
+        const rawRisk = (analysis && typeof analysis.overallRisk === 'string')
+          ? analysis.overallRisk.toUpperCase()
+          : 'UNKNOWN';
+        const overall_risk = ALLOWED_RISKS.has(rawRisk) ? rawRisk : 'UNKNOWN';
+        const issues = (analysis && Array.isArray(analysis.issues)) ? analysis.issues : [];
+
+        const { error: dbErr } = await supabase
+          .from('checks')
+          .upsert({
+            form_type: (typeof formType === 'string' && formType) ? formType : 'unknown',
+            overall_risk,
+            issue_count: issues.length,
+            issues,
+            customer_email: session.customer_details?.email || null,
+            paid: true,
+            stripe_session_id: sessionId,
+          }, { onConflict: 'stripe_session_id', ignoreDuplicates: true });
+
+        if (dbErr) console.error('[formguard-claude] supabase insert error:', dbErr.message);
+      } catch (err) {
+        console.error('[formguard-claude] supabase capture failed:', err.message);
+      }
     }
 
     return { statusCode: 200, headers, body: JSON.stringify({ content: data.content }) };
